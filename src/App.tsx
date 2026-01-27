@@ -1,34 +1,34 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import { Now } from './pages/now'
+import { Tasks } from './pages/tasks'
+import { Settings } from './pages/settings'
 
 function App() {
   const [count, setCount] = useState(0)
+  const [page, setpage] = useState("now")
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div style={{ width: '100vw', height: '100vh', justifyContent: 'center' }} >
+      <nav style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around', width: '100%' }}>
+        <div>
+          <p onClick={() => setpage("tasks")} >Tasks</p>
+        </div>
+        <div>
+          <p onClick={() => setpage("now")} title='now'>Now</p>
+        </div>
+        <div>
+          <p onClick={() => setpage("settings")} >Settings</p>
+        </div>
+      </nav>
+      {page == 'now' && (
+        <Now />)}
+      {page == 'tasks' && (
+        <Tasks />)}
+      {page == 'settings' && (
+        <Settings />)}
+
+    </div>
   )
 }
 
