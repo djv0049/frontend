@@ -1,13 +1,19 @@
 import type { task } from "../../types/task";
 
 export function createTask(task: Partial<task>) {
-  console.log(task)
-  fetch('http://0.0.0.0:3002/task', {
-    method: "POST", // Specify the method
+  console.log("hit task")
+  console.log("Task", task)
+  console.log('json stringify data', JSON.stringify(task))
+  fetch('http://localhost:3002/task/', {
+    method: "POST",
     headers: {
-      "Content-Type": "application/json", // Tell server you're sending JSON
+      "Content-Type": "application/json",
     },
-    body: JSON.stringify(task), // Body must be a string for JSON
+    body: JSON.stringify(task),
   });
 
 }
+export function getAllTasks() {
+  return fetch('http://localhost:3002/task/', { method: "GET" })
+}
+

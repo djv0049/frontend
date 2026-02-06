@@ -1,7 +1,8 @@
 export type task = { 
+  _id:any
   name: string
-  startTime?: Date
-  endTime?: Date
+  startTime?: string
+  endTime?: string
   date?: Date
   priority: number
   repeatingFrequency?: string
