@@ -1,17 +1,24 @@
-import type { task } from "../../types/task"
+type props = {
+  _id?: string
+  name: string
+  priority: number
+}
+export function Task(props: props) {
 
-export function Task({_id, name, priority, startTime}) {
-  
+  console.log("PROPS:", props)
 
 
   return (
-      <div key={_id}>
+    <div style={{ width: "90%", borderRadius: '1em', border: 'solid', display: "flex", flexDirection: "column", justifyContent: "center" }}>
+      <button style={{ marginLeft: '0.5em', marginTop: '0.5em' }}>Icon button</button>
+      <div style={{ display: "flex", flexDirection: "row" }}>
         <div>Name:</div>
-        <div>{name}</div>
-        <div>priority:</div>
-        <div>{priority}</div>
-        <div>startTime:</div>
-        <div>{startTime}</div>
+        <div>{props.name}</div>
       </div>
-      )
+      <div style={{ display: "flex", flexDirection: "row" }}>
+        <div>priority:</div>
+        <div>{props.priority}</div>
+      </div>
+    </div>
+  )
 }

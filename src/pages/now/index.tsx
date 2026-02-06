@@ -1,9 +1,9 @@
-import { Task } from "../../components/task";
+import { TaskList } from "../../components/taskList";
 
 export function Now() {
   return (
-    <div style={{ display:"flex", justifyContent: "center" }}>
-      <Task />
+    <div style={{ justifyContent: "center" }}>
+      <TaskList />
     </div>
   )
 }

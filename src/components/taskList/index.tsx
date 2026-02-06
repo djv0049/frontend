@@ -20,25 +20,16 @@ export function TaskList() {
     load()
   }, [])
 
-
   return (
-    <div style={{ width: "60%", borderRadius: '1em', border: 'solid', display: "flex", flexDirection: "column", justifyContent: "center" }}>
-      <button style={{ marginLeft: '0.5em', marginTop: '0.5em' }}>Icon button</button>
-      <table>
-        {taskList && (
-          taskList.map((t) => (
-            <Task {...t}/>
-          )))}
-      <table>
-        <tr>
-          <td>
-            Name:
-          </td>
-          <td >
-            [[]]
-          </td>
-        </tr>
-      </table>
-    </div>
+    <>
+      {taskList && (
+        taskList.map((t) => (
+          <Task key={t._id}
+            priority={t.priority}
+            name={t.name}
+          />
+        ))
+      )}
+    </>
   )
 }
