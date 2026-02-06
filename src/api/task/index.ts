@@ -1,10 +1,9 @@
 import type { task } from "../../types/task";
 
+
+const url = 'http://localhost:3002'
 export function createTask(task: Partial<task>) {
-  console.log("hit task")
-  console.log("Task", task)
-  console.log('json stringify data', JSON.stringify(task))
-  fetch('http://localhost:3002/task/', {
+  fetch(url+'/task/', {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -13,7 +12,7 @@ export function createTask(task: Partial<task>) {
   });
 
 }
-export function getAllTasks() {
-  return fetch('http://localhost:3002/task/', { method: "GET" })
+export async function getAllTasks() {
+  return await fetch(url+'/task/', { method: "GET" })
 }
 
