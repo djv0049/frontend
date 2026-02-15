@@ -1,4 +1,4 @@
-import { AddTask } from "../../components/addTask/AddTask";
+import { AddTask } from "../../components/addTask";
 
 export function Tasks() {
 

@@ -21,10 +21,9 @@ export function AddTask() {
     createTask({ name, startTime, endTime, date, priority, streak })
   }
   return <>
-    <div style={{ display: "flex", flexDirection: 'column' }}>
+    <div style={{ display: "flex", flexDirection: 'row', justifyContent:"space-between" }}>
+      <p>Name</p>
       <input placeholder="Do the thing!" onChange={(e) => setName(e.target.value)} />
-
-      <p>{name}</p>
     </div>
 
     <div style={{ display: "flex", flexDirection: 'column' }}>
