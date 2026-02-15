@@ -7,7 +7,5 @@ export type task = {
   priority: number
   repeatingFrequency?: string
   repeatingFrequencyCount?: number
-
-
-
+  streak?: boolean
 }

@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { createTask } from "../../api/task"
 import { CreateTaskButton } from "../buttons/createTaskButton"
+import { Checkbox } from "@mui/material"
 
 //type frequency = "never" | "daily" | "weekly" | "monthly | yearly"
 
@@ -13,11 +14,12 @@ export function AddTask() {
   //const [repeatingFrequency, setRepeatingFrequency] = useState<frequency>("never")
   //const [repeatingFrequencyCount, setRepeatingFrequencyCount] = useState(1)
   const [date, setDate] = useState(new Date())
+  const [streak, setIsStreak] = useState(true)
 
 
   const handleCreateButtonClick = () => {
     console.log("hit button")
-    createTask({ name: name, startTime: startTime, endTime: endTime, date: date, priority: priority })
+    createTask({ name, startTime, endTime, date, priority, streak })
   }
   return <>
     <div style={{ display: "flex", flexDirection: 'column' }}>
@@ -44,6 +46,11 @@ export function AddTask() {
     <div style={{ display: "flex", flexDirection: 'column' }}>
       <input type='time' onChange={(e) => setEndTime(e.target.value)} />
       <p>{endTime}</p>
+    </div>
+    <div style={{ display: "flex", flexDirection: 'column' }}>
+      <Checkbox aria-label="Streak" defaultChecked onChange={(e) => setIsStreak(e.target.value)} />
+
+      {/*Toggle / check for streak*/}
     </div>
     <CreateTaskButton onClick={handleCreateButtonClick} />
   </>
