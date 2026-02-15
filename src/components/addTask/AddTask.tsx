@@ -18,7 +18,6 @@ export function AddTask() {
 
 
   const handleCreateButtonClick = () => {
-    console.log("hit button")
     createTask({ name, startTime, endTime, date, priority, streak })
   }
   return <>
@@ -48,7 +47,7 @@ export function AddTask() {
       <p>{endTime}</p>
     </div>
     <div style={{ display: "flex", flexDirection: 'column' }}>
-      <Checkbox aria-label="Streak" defaultChecked onChange={(e) => setIsStreak(e.target.value)} />
+      <Checkbox aria-label="Streak" defaultChecked onChange={(e) => setIsStreak(e.target.checked)} />
 
       {/*Toggle / check for streak*/}
     </div>
