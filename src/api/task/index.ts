@@ -17,7 +17,7 @@ export async function getAllTasks() {
 }
 
 export async function updateTask(task: Partial<task>){
-  return await fetch(url, {
+  return await fetch(url+'/task/', {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

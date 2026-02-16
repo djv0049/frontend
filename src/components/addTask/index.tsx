@@ -14,11 +14,11 @@ export function AddTask() {
   //const [repeatingFrequency, setRepeatingFrequency] = useState<frequency>("never")
   //const [repeatingFrequencyCount, setRepeatingFrequencyCount] = useState(1)
   const [date, setDate] = useState(new Date())
-  const [streak, setIsStreak] = useState(true)
+  const [isStreak, setIsStreak] = useState(true)
 
 
   const handleCreateButtonClick = () => {
-    createTask({ name, startTime, endTime, date, priority, streak })
+    createTask({ name, startTime, endTime, date, priority, isStreak })
   }
   return <>
     <div style={{ display: "flex", flexDirection: 'row', justifyContent:"space-between" }}>
