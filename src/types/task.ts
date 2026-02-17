@@ -1,5 +1,5 @@
-export type task = { 
-  _id:any
+export type task = {
+  _id: any
   name: string
   startTime?: string
   endTime?: string
@@ -9,4 +9,5 @@ export type task = {
   repeatingFrequencyCount?: number
   streakCount?: number
   isStreak?: boolean
+  lastCompleted?: Date;
 }
