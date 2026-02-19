@@ -1,15 +1,9 @@
 import { useState, useEffect } from "react"
 import { getAllTasks } from "../../api/task"
 import type { task } from "../../types/task"
-import moment from "moment"
+import { doneToday, doneYesterday } from "../../models/task"
 
 export function Streaks() {
-
-  // NOTE: 
-  // get streak things as props
-  // calculate streaks validity
-  // update streak info
-  // display streak
 
   const [taskList, setTaskList] = useState<task[]>([])
 
@@ -31,22 +25,6 @@ export function Streaks() {
     load()
   }, [])
 
-  const doneToday = ((t: task) => {
-    return t.lastCompleted && t.lastCompleted >= moment(new Date()).startOf("day").toDate()
-  })
-
-  const doneYesterday()
-
-    /* NOTE: 
-     * this is great, but can't be used here, it's just for adding the streak count. this should all be handled in the task utils
-     *
-     * 
-  const updateStreak = ((t: task) => {
-    if (!t.streakCount) t.streakCount = 0
-    if (doneToday(t))
-      t.streakCount += 1
-  })
-  */
 
   return (
     <div>
@@ -56,8 +34,8 @@ export function Streaks() {
         else
 
           return (
-            <div key={`streak ${t._id}`}>
-              <p>{t.streakCount} - {t.name}</p>
+            <div key={`streak ${t._id}`} style={{ width: "100%",display:"flex", justifyContent:"space-between" }}>
+              <p>{t.name}</p> {doneToday(t) ? (<p>🔥</p>) : doneYesterday(t) ? (<p>🔴</p>) : (<p>❌</p>) }
             </div>
           )
       }
