@@ -23,9 +23,9 @@ export function TaskList() {
   return (
     <>
       {taskList && (
-        taskList.map((t: TaskModel) => ( <Task key={t._id}
+        taskList.map((t: TaskModel) => ( t.currentlyRelevant() ? (<Task key={t._id}
           task={t}
-          />
+          />):(<></>)
         ))
       )}
     </>

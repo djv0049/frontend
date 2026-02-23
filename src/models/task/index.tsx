@@ -41,10 +41,11 @@ export class TaskModel implements task {
   }
 
   doneToday() {
-    console.log(this.lastCompleted)
+    console.log(this.name, this.lastCompleted)
     if (!this.lastCompleted) return false
     const startOfDay = moment().startOf('day')
     const completedAt = moment(this.lastCompleted)
+    console.log(this.name, " been completed today: ", startOfDay.isBefore(completedAt))
     return startOfDay.isBefore(completedAt)
   }
 
@@ -72,6 +73,15 @@ export class TaskModel implements task {
   }
   updateTask() {
     updateTask(this)
+  }
+
+  currentlyRelevant() {
+    if (this.startTime && this.endTime){
+      return moment(this.startTime, "HH:mm").isBefore(moment()) && moment(this.endTime, "HH:mm").isAfter(moment()) && !this.doneToday()
+    }
+
+    console.log(this.name , " has no start and finish time")
+    return false
   }
 }
 
