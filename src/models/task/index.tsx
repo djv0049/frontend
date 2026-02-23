@@ -41,12 +41,10 @@ export class TaskModel implements task {
   }
 
   doneToday() {
-    console.log(this.name, this.lastCompleted)
     if (!this.lastCompleted) return false
     const startOfDay = moment().startOf('day')
-    const completedAt = moment(this.lastCompleted)
-    console.log(this.name, " been completed today: ", startOfDay.isBefore(completedAt))
-    return startOfDay.isBefore(completedAt)
+    const lastCompleted = moment(this.lastCompleted)
+    return startOfDay.isBefore(lastCompleted)
   }
 
   doneYesterday() {

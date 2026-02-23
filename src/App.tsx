@@ -16,7 +16,7 @@ function App() {
     fetch("http://0.0.0.0:3002/task/test")
       .then(res => res.json())
       .then(data => setMessage(data.working));
-    console.log(message)
+    console.log("IS WORKING: ",message)
   }, [message]);
 
 

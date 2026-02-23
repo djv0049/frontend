@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react"
+import { useEffect, useState } from "react"
 import { getAllTasks } from "../../api/task"
 import { TaskModel } from "../../models/task"
 
@@ -20,9 +20,8 @@ export function Streaks() {
     load()
   }, [])
 
-  const isDoneToday = ((task:TaskModel) => {
-    const done =  task.doneToday()
-    console.log(done  )
+  const isDoneToday = ((task: TaskModel) => {
+    const done = task.doneToday()
     return done
 
   })
@@ -33,16 +32,16 @@ export function Streaks() {
       <p>Streaks!</p>
       {
         taskList.map((t: TaskModel) => {
-        if (t._id && !t.isStreak) return
-        else
+          if (t._id && !t.isStreak) return
+          else
 
-          return (
-            <div key={`streak ${t._id}`} style={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
-              <p>{t.name}</p> {isDoneToday(t) ? (<p>🔥{t.streakCount}</p>) : t.doneYesterday() ? (<p>🔴</p>) : (<p>❌</p>)}
-            </div>
-          )
-      }
-      )}
+            return (
+              <div key={`streak ${t._id}`} style={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
+                <p>{t.name}</p> {isDoneToday(t) ? (<p>🔥{t.streakCount}</p>) : t.doneYesterday() ? (<p>🔴</p>) : (<p>❌</p>)}
+              </div>
+            )
+        }
+        )}
     </div>
   )
 }

@@ -26,26 +26,28 @@ export function AddTask() {
       <input placeholder="Do the thing!" onChange={(e) => setName(e.target.value)} />
     </div>
 
-    <div style={{ display: "flex", flexDirection: 'column' }}>
+    <div style={{ display: "flex", flexDirection: 'row', justifyContent:"space-between" }}>
+      <p>Priority</p>
       <input placeholder="5" type='number' onChange={(e) => setPriority(Number(e.target.value))} />
-      <p>{priority}</p>
     </div>
 
-    <div style={{ display: "flex", flexDirection: 'column' }}>
+    <div style={{ display: "flex", flexDirection: 'row', justifyContent:"space-between" }}>
+      <p>Date</p>
       <input type='date' onChange={(e) => setDate(new Date(e.target.value))} />
-      <p>{date.toISOString()}</p>
     </div>
 
-    <div style={{ display: "flex", flexDirection: 'column' }}>
+    <div style={{ display: "flex", flexDirection: 'row', justifyContent:"space-between" }}>
+      <p>Start Time</p>
       <input type='time' onChange={(e) => setStartTime(e.target.value)} />
-      <p>{startTime}</p>
     </div>
 
-    <div style={{ display: "flex", flexDirection: 'column' }}>
+    <div style={{ display: "flex", flexDirection: 'row', justifyContent:"space-between" }}>
+      <p>End Time</p>
       <input type='time' onChange={(e) => setEndTime(e.target.value)} />
-      <p>{endTime}</p>
     </div>
-    <div style={{ display: "flex", flexDirection: 'column' }}>
+    <div style={{ display: "flex", flexDirection: 'row', justifyContent:"space-between" }}>
+      <p>Is Streak</p>
+      
       <Checkbox aria-label="Streak" defaultChecked onChange={(e) => setIsStreak(e.target.checked)} />
 
       {/*Toggle / check for streak*/}

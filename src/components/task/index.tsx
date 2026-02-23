@@ -1,16 +1,15 @@
-import type { TaskModel as taskClass}  from "../../models/task"
+import type { TaskModel as taskClass } from "../../models/task"
 
 type props = {
   task: taskClass
+  showDelete: boolean
 }
 export function Task(props: props) {
   const { task } = props
-
-  console.log("PROPS:", props)
-
+  const { showDelete } = props || false
 
   return (
-    <div style={{ width: "90%", borderRadius: '1em', border: 'solid', padding: '1rem', margin:'1rem', display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+    <div style={{ width: "90%", borderRadius: '1em', border: 'solid', padding: '1rem', margin: '1rem', display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
       <div>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <div>Name:</div>
@@ -27,12 +26,17 @@ export function Task(props: props) {
       </div>
 
       <div>
-      <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-        <button style={{  padding:"0.5rem" ,margin: "0.1rem"}} onClick={(()=> task.markComplete())}>✅</button>
-        <button style={{  padding:"0.5rem" ,margin: "0.1rem"}}>⏲️</button>
-        <button style={{  padding:"0.5rem" ,margin: "0.1rem"}}>❌</button>
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+          {showDelete ? (<button style={{ color: "red", padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markComplete())}>󰆴</button>) : (
+
+            <>
+              <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markComplete())}>✅</button>
+              <button style={{ padding: "0.5rem", margin: "0.1rem" }}>⏲️</button>
+              <button style={{ padding: "0.5rem", margin: "0.1rem" }}>❌</button>
+            </>
+          )}
+        </div>
       </div>
     </div>
-</div>
   )
 }

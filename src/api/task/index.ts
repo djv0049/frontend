@@ -28,7 +28,6 @@ export async function getAllTasks() {
     rawTask.isStreak,
     rawTask.lastCompleted ? rawTask.lastCompleted : undefined
   ))
-  console.log("ro", returnObject)
   return returnObject
 }
 
