@@ -10,4 +10,11 @@ export type task = {
   streakCount?: number
   isStreak?: boolean
   lastCompleted?: Date;
+  doneToday(): boolean;
+  doneYesterday(): boolean;
+  updateStreak(): void;
+
+  markComplete(): void;
+  markCancelled(): void;
+
 }

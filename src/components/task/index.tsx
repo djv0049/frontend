@@ -1,24 +1,38 @@
+import type { TaskModel as taskClass}  from "../../models/task"
+
 type props = {
-  _id?: string
-  name: string
-  priority: number
+  task: taskClass
 }
 export function Task(props: props) {
+  const { task } = props
 
   console.log("PROPS:", props)
 
 
   return (
-    <div style={{ width: "90%", borderRadius: '1em', border: 'solid', display: "flex", flexDirection: "column", justifyContent: "center" }}>
-      <button style={{ marginLeft: '0.5em', marginTop: '0.5em' }}>Icon button</button>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <div>Name:</div>
-        <div>{props.name}</div>
+    <div style={{ width: "90%", borderRadius: '1em', border: 'solid', padding: '1rem', margin:'1rem', display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+      <div>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <div>Name:</div>
+          <div>{task.name}</div>
+        </div>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <div>priority:</div>
+          <div>{task.priority}</div>
+        </div>
+        <div style={{ display: "flex", flexDirection: "row" }}>
+          <div>priority:</div>
+          <div>{task.priority}</div>
+        </div>
       </div>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <div>priority:</div>
-        <div>{props.priority}</div>
+
+      <div>
+      <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+        <button style={{  padding:"0.5rem" ,margin: "0.1rem"}} onClick={(()=> task.markComplete())}>✅</button>
+        <button style={{  padding:"0.5rem" ,margin: "0.1rem"}}>⏲️</button>
+        <button style={{  padding:"0.5rem" ,margin: "0.1rem"}}>❌</button>
       </div>
     </div>
+</div>
   )
 }

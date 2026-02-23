@@ -1,22 +1,17 @@
-import { useState, useEffect } from "react"
+import { useState, useEffect, useMemo } from "react"
 import { getAllTasks } from "../../api/task"
-import type { task } from "../../types/task"
-import { doneToday, doneYesterday } from "../../models/task"
+import { TaskModel } from "../../models/task"
 
 export function Streaks() {
 
-  const [taskList, setTaskList] = useState<task[]>([])
+  const [taskList, setTaskList] = useState<TaskModel[]>([])
 
   // TODO: replace this with store, or something.
   useEffect(() => {
     const load = async () => {
       try {
         const res = await getAllTasks()
-        console.log("got tasks in streaks")
-        if (!res.ok) throw new Error("Failed to fetch");
-        const body = await res.json();
-        const tasks = body
-        setTaskList(tasks);
+        setTaskList(res);
       }
       catch {
         console.log("ERROER")
@@ -25,17 +20,25 @@ export function Streaks() {
     load()
   }, [])
 
+  const isDoneToday = ((task:TaskModel) => {
+    const done =  task.doneToday()
+    console.log(done  )
+    return done
+
+  })
+
 
   return (
     <div>
       <p>Streaks!</p>
-      {taskList.map((t: task) => {
+      {
+        taskList.map((t: TaskModel) => {
         if (t._id && !t.isStreak) return
         else
 
           return (
-            <div key={`streak ${t._id}`} style={{ width: "100%",display:"flex", justifyContent:"space-between" }}>
-              <p>{t.name}</p> {doneToday(t) ? (<p>🔥</p>) : doneYesterday(t) ? (<p>🔴</p>) : (<p>❌</p>) }
+            <div key={`streak ${t._id}`} style={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
+              <p>{t.name}</p> {isDoneToday(t) ? (<p>🔥{t.streakCount}</p>) : t.doneYesterday() ? (<p>🔴</p>) : (<p>❌</p>)}
             </div>
           )
       }
