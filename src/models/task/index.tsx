@@ -15,13 +15,14 @@ export class TaskModel implements task {
   streakCount?: number
   isStreak?: boolean
   lastCompleted?: Date
-  timeframes: TaskTimeframeType[] = []
+  timeframes: TaskTimeframeType[] 
   score: number = 0
   // history: TaskEvent[] = []
   constructor(
     _id: any,
     name: string,
     priority: number,
+    timeframes?: TaskTimeframeType[],
     startTime?: string,
     endTime?: string,
     date?: Date,
@@ -34,14 +35,16 @@ export class TaskModel implements task {
     this._id = _id
     this.name = name
     this.priority = priority
+    this.timeframes = timeframes || []
     this.startTime = startTime && startTime
-    this.endTime = endTime
-    this.date = date
-    this.repeatingFrequency = repeatingFrequency
-    this.repeatingFrequencyCount = repeatingFrequencyCount
-    this.streakCount = streakCount
-    this.isStreak = isStreak
-    this.lastCompleted = lastCompleted
+    this.endTime = endTime && endTime
+    this.date = date && date
+    // cooldown
+    this.repeatingFrequency = repeatingFrequency && repeatingFrequency
+    this.repeatingFrequencyCount = repeatingFrequencyCount && repeatingFrequencyCount
+    this.streakCount = streakCount && streakCount
+    this.isStreak = isStreak && isStreak
+    this.lastCompleted = lastCompleted && lastCompleted
   }
 
   doneToday() {
@@ -78,15 +81,16 @@ export class TaskModel implements task {
   }
 
   currentTimeframe(): (TaskTimeframeType | null)[] {
-    if (!this.timeframes.length) return [null]
+    if (!this.timeframes || !this.timeframes.length) return [null]
+    console.log("timeframe length", this.timeframes)
     const relevantToday = this.timeframes.map((tf) => { return tf.days?.find((x) => moment(new Date()).day() === x) ? tf : null })
     console.log("relevant today: ", relevantToday)
-    if (!relevantToday) return [null]
-    const relevantNow = this.timeframes.map((tf) => { return moment(tf.start, "HH:mm").isAfter(moment()) && moment(tf.finish, "HH:mm").isBefore(moment()) ? tf : null })
-    if (!relevantNow) return [null]
+    if (!relevantToday.length) return [null]
+    const relevantNow = this.timeframes.map((tf) => { 
+      return moment(tf.start, "HH:mm").isAfter(moment()) && moment(tf.finish, "HH:mm").isBefore(moment()) ? tf : null })
+    if (!relevantNow.length) return [null]
     console.log("relevant now: ", relevantNow)
     return relevantNow
-
   }
 
   currentlyRelevant(): boolean {
@@ -96,7 +100,7 @@ export class TaskModel implements task {
 
     if (this.currentTimeframe()[0])
       console.log("Current timeframe length", this.currentTimeframe())
-      return true
+    return true
 
     return true
   }

@@ -19,6 +19,7 @@ export async function getAllTasks() {
     rawTask._id,
     rawTask.name,
     rawTask.priority,
+    rawTask.timeframes,
     rawTask.startTime,
     rawTask.endTime,
     rawTask.date,

@@ -1,0 +1,36 @@
+.inputContainer {
+  display: flex ;
+  flex-direction: row;
+  justify-content:space-between;
+  margin: 1rem;
+  background: grey;
+  padding: 0.5rem;
+  padding-left: 1rem;
+  border-radius: 0.5rem;
+}
+
+.inputContainerContainer {
+  display: flex ;
+  flex-direction: row;
+  justify-content:space-between;
+  margin: 1rem;
+  background: grey;
+  padding: 0.5rem;
+  padding-left: 1rem;
+  border-radius: 0.5rem;
+}
+
+.timeframe { 
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  width: 80%;
+}
+
+.inputField {
+  border-radius: 0.25rem;
+  width: 30%;
+  padding: 1rem;
+}

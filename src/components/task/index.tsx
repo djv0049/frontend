@@ -20,8 +20,8 @@ export function Task(props: props) {
           <div>{task.priority}</div>
         </div>
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <div>priority:</div>
-          <div>{task.priority}</div>
+          <div>Times:</div>
+          <div>{}</div>
         </div>
       </div>
 

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { AddTask } from "../../components/addTask";
 import { Button } from "@mui/material";
 
-const AddView = () => <div><AddTask /></div>
+const AddView = () => <AddTask />
 const ManageView = () => <div>Manage View Content</div>;
 export function Tasks() {
 
