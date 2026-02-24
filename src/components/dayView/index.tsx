@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react"
 import { getAllTasks } from "../../api/task"
 import type { TaskModel } from "../../models/task"
+import moment from "moment"
 
 export function DayView() {
   const [taskList, setTaskList] = useState<TaskModel[]>([])
@@ -21,7 +22,16 @@ export function DayView() {
 
   return (
     <>
-      {taskList && taskList.sort((a, b) => a.startTime - b.startTime) 
+      {taskList && taskList.sort((a, b) =>
+        moment(a.startTime, "HH:mm")
+          .isBefore(moment(b.startTime, "HH:mm"))
+          ? -1 
+          : 1)
+        .map((task:TaskModel) => {
+          return 
+
+        })}
+
     </>
   )
 }
