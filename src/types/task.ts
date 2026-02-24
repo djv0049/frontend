@@ -1,3 +1,5 @@
+import type { TaskTimeframeType } from "./taskTimeframe"
+
 export type task = {
   _id: any
   name: string
@@ -10,6 +12,7 @@ export type task = {
   streakCount?: number
   isStreak?: boolean
   lastCompleted?: Date;
+  timeframes: TaskTimeframeType[]
   doneToday(): boolean;
   doneYesterday(): boolean;
   updateStreak(): void;

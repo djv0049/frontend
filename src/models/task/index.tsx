@@ -1,6 +1,7 @@
 import moment from "moment"
 import type { task } from "../../types/task"
 import { updateTask } from "../../api/task"
+import type { TaskTimeframeType } from "../../types/taskTimeframe"
 
 export class TaskModel implements task {
   _id: any
@@ -13,7 +14,10 @@ export class TaskModel implements task {
   repeatingFrequencyCount?: number
   streakCount?: number
   isStreak?: boolean
-  lastCompleted?: Date;
+  lastCompleted?: Date
+  timeframes: TaskTimeframeType[] = []
+  score: number = 0
+  // history: TaskEvent[] = []
   constructor(
     _id: any,
     name: string,
@@ -73,13 +77,28 @@ export class TaskModel implements task {
     updateTask(this)
   }
 
-  currentlyRelevant() {
-    if (this.startTime && this.endTime){
-      return moment(this.startTime, "HH:mm").isBefore(moment()) && moment(this.endTime, "HH:mm").isAfter(moment()) && !this.doneToday()
-    }
+  currentTimeframe(): (TaskTimeframeType | null)[] {
+    if (!this.timeframes.length) return [null]
+    const relevantToday = this.timeframes.map((tf) => { return tf.days?.find((x) => moment(new Date()).day() === x) ? tf : null })
+    console.log("relevant today: ", relevantToday)
+    if (!relevantToday) return [null]
+    const relevantNow = this.timeframes.map((tf) => { return moment(tf.start, "HH:mm").isAfter(moment()) && moment(tf.finish, "HH:mm").isBefore(moment()) ? tf : null })
+    if (!relevantNow) return [null]
+    console.log("relevant now: ", relevantNow)
+    return relevantNow
 
-    console.log(this.name , " has no start and finish time")
-    return false
+  }
+
+  currentlyRelevant(): boolean {
+    // NOTE: temp code to handle legacy objects before their deletion
+    if (this.startTime && this.endTime) { return moment(this.startTime, "HH:mm").isBefore(moment()) && moment(this.endTime, "HH:mm").isAfter(moment()) && !this.doneToday() }
+    // NOTE: end of temp code
+
+    if (this.currentTimeframe()[0])
+      console.log("Current timeframe length", this.currentTimeframe())
+      return true
+
+    return true
   }
 }
 
