@@ -15,7 +15,7 @@ export class TaskModel implements task {
   streakCount?: number
   isStreak?: boolean
   lastCompleted?: Date
-  timeframes: TaskTimeframeType[] 
+  timeframes: TaskTimeframeType[]
   score: number = 0
   // history: TaskEvent[] = []
   constructor(
@@ -80,17 +80,15 @@ export class TaskModel implements task {
     updateTask(this)
   }
 
-  currentTimeframe(): (TaskTimeframeType | null)[] {
-    if (!this.timeframes || !this.timeframes.length) return [null]
-    console.log("timeframe length", this.timeframes)
+  currentTimeframe(): (TaskTimeframeType | null) {
+    if (!this.timeframes || !this.timeframes.length) return null
     const relevantToday = this.timeframes.map((tf) => { return tf.days?.find((x) => moment(new Date()).day() === x) ? tf : null })
-    console.log("relevant today: ", relevantToday)
-    if (!relevantToday.length) return [null]
-    const relevantNow = this.timeframes.map((tf) => { 
-      return moment(tf.start, "HH:mm").isAfter(moment()) && moment(tf.finish, "HH:mm").isBefore(moment()) ? tf : null })
-    if (!relevantNow.length) return [null]
-    console.log("relevant now: ", relevantNow)
-    return relevantNow
+    if (!relevantToday || !relevantToday.length) return null
+    const relevantNow = this.timeframes.map((tf) => {
+      return moment(tf.start, "HH:mm").isAfter(moment()) && moment(tf.finish, "HH:mm").isBefore(moment()) ? tf : null
+    })
+    if (!relevantNow || !relevantNow.length) return null
+    return relevantNow[0]
   }
 
   currentlyRelevant(): boolean {
@@ -98,11 +96,29 @@ export class TaskModel implements task {
     if (this.startTime && this.endTime) { return moment(this.startTime, "HH:mm").isBefore(moment()) && moment(this.endTime, "HH:mm").isAfter(moment()) && !this.doneToday() }
     // NOTE: end of temp code
 
-    if (this.currentTimeframe()[0])
+    if (this.currentTimeframe())
       console.log("Current timeframe length", this.currentTimeframe())
     return true
+  }
 
-    return true
+  async doLater() {
+    /**Adds "postPoned" to the history of task and pushes the task back x minutes*/
+    if (!this.currentTimeframe) return this
+
+    //this.history.push({ event: 'postponed', at: new Date() })
+
+    const minutesModifier = 10
+    let end = moment(this.currentTimeframe()?.finish, "HH:mm")
+    let start = moment(this.currentTimeframe()?.start, "HH:mm")
+
+    const endOfToday = moment().endOf("day").format("HH:mm")
+
+    if (start.diff(endOfToday, 'minutes') < minutesModifier)
+      start = start.add(minutesModifier, 'minutes')
+
+    if (end.diff(endOfToday, 'minutes') < minutesModifier)
+      end = end.add(minutesModifier, 'minutes')
+    return this
   }
 }
 

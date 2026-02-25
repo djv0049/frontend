@@ -1,3 +1,5 @@
+import moment from "moment"
+
 export class TaskModel {
   //frequency?: { interval: Interval; count: number } | undefined;
   //initialDate?: string | undefined;
@@ -7,12 +9,11 @@ export class TaskModel {
 
   title: string = 'No Title'
   priority: number = 1
-  currentTimeframe?: Timeframe
+  currentTimeframe?: {start: string, end: string}
 
   constructor(props: TaskObjectType) {
     Object.assign(this, props)
 
-    this.currentTimeframe = this.getCurrentTimeframe()
     this.score = this.scoreCalculated()
 
     this.timeframes = props.timeframes
@@ -84,16 +85,16 @@ export class TaskModel {
     this.history.push({ event: 'postponed', at: new Date() })
 
     const minutesModifier = 10
-    const { start, end } = this.currentTimeframe
-    const endOfToday = new Date()
-    endOfToday.setHours(23)
-    endOfToday.setMinutes(59)
+    let end  = moment(this.currentTimeframe.end, "HH:mm")
+    let start = moment(this.currentTimeframe.start, "HH:mm")
 
-    if (dayjs(start).diff(new Date()) * 1000 * 60 < minutesModifier)
-      dayjs(start).add(minutesModifier, 'minutes')
+    const endOfToday = moment().endOf("day")
 
-    if (dayjs(end).diff(endOfToday) * 1000 * 60 < minutesModifier)
-      dayjs(end).add(minutesModifier, 'minutes')
+    if (start.diff(endOfToday, 'minutes') < minutesModifier)
+      start = start.add(minutesModifier, 'minutes')
+
+    if (end.diff(endOfToday, 'minutes') < minutesModifier)
+      end = end.add(minutesModifier, 'minutes')
     return this
   }
 }

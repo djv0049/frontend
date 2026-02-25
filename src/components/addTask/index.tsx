@@ -6,6 +6,8 @@ import { Checkbox, IconButton } from "@mui/material"
 import React from "react"
 import { TaskModel } from "../../models/task/task"
 import type { TaskTimeframeType } from "../../types/taskTimeframe"
+import moment from "moment"
+import { daysEnum } from "../../types/days"
 
 //type frequency = "never" | "daily" | "weekly" | "monthly | yearly"
 
@@ -21,7 +23,13 @@ export function AddTask() {
   const [isRepeating, setIsRepeating] = useState(true)
   const [priority, setPriority] = React.useState<number>(1)
   const [taskForDisplay, setTaskForDisplay] = React.useState<TaskModel>()
-  const [timeframes, setTimeframes] = useState<TaskTimeframeType[]>([defaultTaskTimeframe])
+  const [timeframes, setTimeframes] = useState<TaskTimeframeType[]>([])
+
+  const defaultTaskTimeframe = {
+    start: moment().format("HH:mm"),
+    end: moment().add(1,'hour').format("HH:mm"),
+    days: daysEnum.sunday
+  }
 
 
   const handleCreateButtonClick = () => {
@@ -30,11 +38,11 @@ export function AddTask() {
 
   useEffect(() => {
     setTaskForDisplay(
-      new TaskModel( 
-        "" , title, priority
-      ),
+      new TaskModel({ 
+       name, priority
+      }),
     )
-  }, [title, timeframes, priority])
+  }, [name, timeframes, priority])
 
   const addTimeframe = (): void => {
     setTimeframes((prev: TaskTimeframeType[]) => [...prev, defaultTaskTimeframe])
@@ -75,9 +83,6 @@ export function AddTask() {
     return
   }
 
-  const addTimeframe = () => {
-    
-  }
   return <div className={styles.container}>
 
     <div className={styles.inputContainer}>
