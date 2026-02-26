@@ -1,22 +1,38 @@
-import { Button } from "@mui/material"
-import { TaskModel } from "../../models/task"
-import React, { useState, useCallback, useEffect } from "react"
-import type { TaskTimeframeType } from "../../types/taskTimeframe"
-import { TaskModel } from "../../models/task/task"
-import { Task } from "../task"
 
+import { useCallback, useEffect, useState } from 'react'
+import React from 'react'
+import { ScrollView, RefreshControl, TextInput, Button } from 'react-native'
+
+export const defaultTaskTimeframe = new TaskTimeframeModel({
+  start: '00:00',
+  finish: '23:59',
+  days: ['monday'],
+})
 
 export function TaskCreateEditView() {
   const [taskForDisplay, setTaskForDisplay] = React.useState<TaskModel>()
   const [priority, setPriority] = React.useState<number>(1)
   const [title, setTitle] = React.useState('')
   const [timeframes, setTimeframes] = useState<TaskTimeframeType[]>([defaultTaskTimeframe])
+  const [refreshing, setRefreshing] = useState(initialState)<boolean>(false)
+
+  const refreshData = useCallback (async () => {
+    await setToAsyncStorageTask()
+  },[])
+
+  const onRefresh = useCallback(async () => {
+    setRefreshing(true)
+    await refreshData()
+    setRefreshing(false)
+  }, [refreshData])
 
   useEffect(() => {
     setTaskForDisplay(
-      new TaskModel( 
-        "" , title, priority
-      ),
+      new TaskModel({
+        title: title,
+        timeframes: timeframes,
+        priority: priority,
+      }),
     )
   }, [title, timeframes, priority])
 
@@ -24,6 +40,14 @@ export function TaskCreateEditView() {
     setTimeframes((prev: TaskTimeframeType[]) => [...prev, defaultTaskTimeframe])
   }
 
+  const setToAsyncStorageTask = async () => {
+    const editingTask = await getEditingTaskFromStorage()
+    if (editingTask) {
+      setTitle(editingTask.title)
+      setTimeframes(editingTask.timeframes)
+      setPriority(editingTask.priority ? editingTask.priority : 1)
+    }
+  }
 
   const updateTimeframe = useCallback((index: number, updated: Partial<TaskTimeframeModel>) => {
     // console.log("updating timeframe array for ", { title }, " with ", updated);
@@ -34,6 +58,11 @@ export function TaskCreateEditView() {
       }),
     )
   },[])
+
+  const reset = async () => {
+    await deleteEditingTaskFromStorage()
+    setTitle('')
+  }
 
   function deleteTimeframe(index: number) {
     // console.log("deleting", timeframes[index]);
@@ -48,64 +77,62 @@ export function TaskCreateEditView() {
 
   const onSave = async () => {
     if (!title || timeframes.length === 0) return
-    const newTask = new TaskModel(
-    "",
-      title,
-      priority,
-      timeframes,
-
-    )
-    // TODO: create the task
+    const newTask = new TaskModel({
+      title: title,
+      timeframes: timeframes,
+      priority: priority,
+    })
+    // TODO: check if editing another task?
+    saveTask(newTask)
+    reset()
     return
   }
 
   return (
-    <>
-      <div style={{ margin: 8 }}>
-        {taskForDisplay && <Task task={taskForDisplay} showDelete={true} />}
+    <ScrollView refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}>
+      </div style={{ margin: 8 }}>
+        {taskForDisplay && <TaskManagementView item={taskForDisplay} />}
       </div>
-      <div style={{ flexDirection: 'row' }}>
-        <div style={{ flex: 3, padding: 4 }}>
+      </div style={{ flexDirection: 'row' }}>
+        </div style={{ flex: 3, padding: 4 }}>
           <p>Title</p>
-          <input 
-            className={styles.inputFeild}
+          <TextInput
             value={title}
-            onChange={(e) => setTitle(e.target.textContent)}
+            onChangeText={setTitle}
             placeholder="Task title"
             style={{ borderWidth: 1, marginBottom: 10 }}
           />
         </div>
 
-        <div style={{ padding: 4 }}>
+        </div style={{ padding: 4 }}>
           <p>Priority</p>
           <div>
-            <input className={styles.inputField}
-              type="number"
-              onChange={(text) => setPriority(Number(text.target.textContent) || 0)}
+            <TextInput
+              keyboardType="numeric"
+              onChangeText={(text) => setPriority(Number(text) || 0)}
               value={priority.toString() || ''}
               style={{ borderWidth: 1, marginBottom: 10 }}
             />
           </div>
         </div>
       </div>
-      <div style={{ flexDirection: 'column', justifyContent: 'space-between' }}>
+      </div style={{ flexDirection: 'column', justifyContent: 'space-between' }}>
         {timeframes.map((tf, i) => (
-          <div key={i} style={{ flex: 1 }}>
-            {/*<TimeFrameEditor
+          </div key={i} style={{ flex: 1 }}>
+            <TimeFrameEditor
               taskIndex={i}
               updateTimeframeCallback={updateTimeframe}
               deleteTimeframeCallback={deleteTimeframe}
               tf={tf}
             />
-            */ }
-            <div style={{ height: 10 }} />
+            </div style={{ height: 10 }} />
           </div>
         ))}
-        <Button onClick={addTimeframe}>Add Timeframe</Button>
-        <div style={{ height: 10 }} />
-        <Button onClick={onSave}>Save</Button>
-        <div style={{ height: 10 }} />
+        <Button onPress={addTimeframe}>Add Timeframe</Button>
+        </div style={{ height: 10 }} />
+        <Button onPress={onSave}>Save</Button>
+        </div style={{ height: 10 }} />
       </div>
-    </>
+    </ScrollView>
   )
 }
