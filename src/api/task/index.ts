@@ -1,7 +1,7 @@
 import { TaskModel } from "../../models/task";
 
+const url = import.meta.env.url
 
-const url = 'http://localhost:3002'
 export function createTask(task: Partial<TaskModel>) {
   fetch(url + '/task/', {
     method: "POST",
