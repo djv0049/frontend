@@ -1,13 +1,12 @@
-import { useCallback, useEffect, useState } from "react"
-import styles from './index.module.scss'
-import { createTask } from "../../api/task"
-import { CreateTaskButton } from "../buttons/createTaskButton"
 import { Checkbox, IconButton } from "@mui/material"
-import React from "react"
-import { TaskModel } from "../../models/task/task"
-import type { TaskTimeframeType } from "../../types/taskTimeframe"
 import moment from "moment"
+import React, { useCallback, useState } from "react"
+import { createTask } from "../../api/task"
+import { TaskModel } from "../../models/task"
 import { daysEnum } from "../../types/days"
+import type { TaskTimeframeType } from "../../types/taskTimeframe"
+import { CreateTaskButton } from "../buttons/createTaskButton"
+import styles from './index.module.scss'
 
 //type frequency = "never" | "daily" | "weekly" | "monthly | yearly"
 
@@ -22,13 +21,12 @@ export function AddTask() {
   const [isStreak, setIsStreak] = useState(true)
   const [isRepeating, setIsRepeating] = useState(true)
   const [priority, setPriority] = React.useState<number>(1)
-  const [taskForDisplay, setTaskForDisplay] = React.useState<TaskModel>()
   const [timeframes, setTimeframes] = useState<TaskTimeframeType[]>([])
 
-  const defaultTaskTimeframe = {
+  const defaultTaskTimeframe: TaskTimeframeType = {
     start: moment().format("HH:mm"),
-    end: moment().add(1,'hour').format("HH:mm"),
-    days: daysEnum.sunday
+    finish: moment().add(1, 'hour').format("HH:mm"),
+    days: [daysEnum.sunday]
   }
 
 
@@ -36,16 +34,11 @@ export function AddTask() {
     createTask({ name, startTime, endTime, date, priority, isStreak })
   }
 
-  useEffect(() => {
-    setTaskForDisplay(
-      new TaskModel({ 
-       name, priority
-      }),
-    )
-  }, [name, timeframes, priority])
 
   const addTimeframe = (): void => {
+    console.log("adding")
     setTimeframes((prev: TaskTimeframeType[]) => [...prev, defaultTaskTimeframe])
+    console.log("timeframes:", timeframes)
   }
 
 
@@ -57,7 +50,7 @@ export function AddTask() {
         return new TaskTimeframeModel(times)
       }),
     )
-  },[])
+  }, [])
 
   function deleteTimeframe(index: number) {
     // console.log("deleting", timeframes[index]);
@@ -71,15 +64,16 @@ export function AddTask() {
   }
 
   const onSave = async () => {
-    if (!title || timeframes.length === 0) return
+    if (!name || timeframes.length === 0) return
     const newTask = new TaskModel(
-    "",
-      title,
+
+      "",
+      name,
       priority,
       timeframes,
-
+    
     )
-    // TODO: create the task
+    createTask(newTask)
     return
   }
 
@@ -115,11 +109,20 @@ export function AddTask() {
     </div>
 
     {isRepeating ? (<>
-    <div className={styles.inputContainerContainer}>
-        <div></div>
-        <IconButton onClick={() => addTimeframe()} >add</IconButton>
-        
+      <div className={styles.inputContainerContainer}>
+        {/* TODO: create timeframe component*/}
+        <IconButton onClick={() => addTimeframe()} >➕ Timeframe </IconButton>
+        { timeframes.map((tf) => {
+          return (
+          <div>
+              start {tf.start}
+            </div>
+          )
+        })
+        }
+
         <div className={styles.timeframe}>
+          
 
         </div>
 
