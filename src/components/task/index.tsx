@@ -8,12 +8,15 @@ type props = {
 export function Task(props: props) {
   const { task, scaleDown } = props
   const { showDelete } = props || false
-  const proportional = 1 - (scaleDown * 0.03)
+  const proportional = 1.5 - (scaleDown * 0.03)
+  console.log(scaleDown)
+  console.log(proportional)
 
 
   return (
     <div style={{
-      background: `rgba(${scaleDown*10},${scaleDown*10},${scaleDown*10},0.${scaleDown})`,
+      zIndex:`${999-proportional}`,
+      background: `rgba(${scaleDown*10},${scaleDown*10},${scaleDown*10},${100-scaleDown*20})`,
       scale: proportional,
       width: "100%",
       borderRadius: `${proportional}rem`,
