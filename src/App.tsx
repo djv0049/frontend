@@ -8,12 +8,13 @@ import { NavigationPanel } from './components/navigationPanel'
 import { LiveView } from './components/liveView'
 import { Streaks } from './components/streaks/streaks'
 
+
 function App() {
   const [page, setpage] = useState("now")
   const [message, setMessage] = useState("");
 
   useEffect(() => {
-    fetch("http://0.0.0.0:3002/task/test")
+    fetch(`${import.meta.env.VITE_URL}/task/test`)
       .then(res => res.json())
       .then(data => setMessage(data.working));
     console.log("IS WORKING: ",message)

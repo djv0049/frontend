@@ -1,6 +1,6 @@
 import { TaskModel } from "../../models/task";
 
-const url = import.meta.env.url
+const url = import.meta.env.VITE_URL
 
 export function createTask(task: Partial<TaskModel>) {
   fetch(url + '/task/', {
