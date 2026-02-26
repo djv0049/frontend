@@ -13,12 +13,13 @@ export function Task(props: props) {
 
   return (
     <div style={{
+      background: `rgba(${scaleDown*10},${scaleDown*10},${scaleDown*10},0.${scaleDown})`,
       scale: proportional,
       width: "100%",
       borderRadius: `${proportional}rem`,
       border: 'solid',
       padding: `${proportional}rem`,
-      margin: `${proportional / (scaleDown * scaleDown)}rem`,
+      margin: `${proportional }rem`,
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",

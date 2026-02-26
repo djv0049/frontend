@@ -20,17 +20,22 @@ export function TaskList() {
     load()
   }, [])
 
+        const x = taskList.filter((t: TaskModel ) => (t.currentlyRelevant()))
+  console.log(x.length)
+
   return (
     <>
       {taskList && (
-        taskList.map((t: TaskModel, i) => (t.currentlyRelevant() ? (
+        taskList.filter((tm: TaskModel ) => (tm.currentlyRelevant())).map((t: TaskModel, i: number)=> {
+          return (
           <Task
             key={t._id}
             task={t}
             scaleDown={i}
 
-          />) : (<></>)
-        ))
+          />
+          )
+        }) 
       )}
     </>
   )
