@@ -2,14 +2,27 @@ import type { TaskModel as taskClass } from "../../models/task"
 
 type props = {
   task: taskClass
-  showDelete: boolean
+  showDelete?: boolean
+  scaleDown: number
 }
 export function Task(props: props) {
-  const { task } = props
+  const { task, scaleDown } = props
   const { showDelete } = props || false
+  const proportional = 1 - (scaleDown * 0.03)
+
 
   return (
-    <div style={{ width: "90%", borderRadius: '1em', border: 'solid', padding: '1rem', margin: '1rem', display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+    <div style={{
+      scale: proportional,
+      width: "100%",
+      borderRadius: `${proportional}rem`,
+      border: 'solid',
+      padding: `${proportional}rem`,
+      margin: `${proportional / (scaleDown * scaleDown)}rem`,
+      display: "flex",
+      flexDirection: "row",
+      justifyContent: "space-between",
+    }}>
       <div>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <div>Name:</div>
@@ -21,7 +34,7 @@ export function Task(props: props) {
         </div>
         <div style={{ display: "flex", flexDirection: "row" }}>
           <div>Times:</div>
-          <div>{}</div>
+          <div>{ }</div>
         </div>
       </div>
 
