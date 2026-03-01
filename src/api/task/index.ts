@@ -33,7 +33,6 @@ export async function getAllTasks() {
 }
 
 export async function updateTask(task: Partial<TaskModel>) {
-  console.log("updating task")
   return await fetch(url + '/task/', {
     method: "PUT",
     headers: {

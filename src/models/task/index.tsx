@@ -45,6 +45,7 @@ export class TaskModel implements task {
     this.streakCount = streakCount && streakCount
     this.isStreak = isStreak && isStreak
     this.lastCompleted = lastCompleted && lastCompleted
+
   }
 
   doneToday() {
@@ -81,7 +82,6 @@ export class TaskModel implements task {
   }
 
   currentTimeframe(): (TaskTimeframeType | null) {
-    console.log("timeframes:", this.name, this.timeframes)
     if (!this.timeframes || !this.timeframes.length) return null
     const relevantToday = this.timeframes.map((tf) => { return tf.days?.find((x) => moment(new Date()).day() === x) ? tf : null })
     if (!relevantToday || !relevantToday.length) return null
@@ -89,15 +89,15 @@ export class TaskModel implements task {
       return moment(tf.start, "HH:mm").isAfter(moment()) && moment(tf.finish, "HH:mm").isBefore(moment()) ? tf : null
     })
     if (!relevantNow || !relevantNow.length) return null
-    console.log(relevantNow)
     return relevantNow[0]
   }
 
   currentlyRelevant(): boolean {
     const current = this.currentTimeframe()
-    if (current)
-      if (this.doneToday()) return false
-    console.log("Current timeframe", current)
+    if (this.isStreak && this.doneToday()) return false
+    if (!this.isStreak && current == null) return false
+    if (current) return true
+    console.warn(this.name, "WENT PAST ALL CHECKS")
     return true
   }
 

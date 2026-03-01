@@ -30,18 +30,14 @@ export function AddTask() {
     days: [daysEnum.sunday]
   }
 
-
   const handleCreateButtonClick = () => {
+    if (!name || timeframes.length === 0) return
     createTask({ name, startTime, endTime, date, priority, isStreak, timeframes })
   }
 
-
   const addTimeframe = (): void => {
-    console.log("adding")
     setTimeframes((prev: TaskTimeframeType[]) => [...prev, defaultTaskTimeframe])
-    console.log("timeframes:", timeframes)
   }
-
 
   const updateTimeframe = (index: number, updated: Partial<TaskTimeframeType>) => {
     // console.log("updating timeframe array for ", { title }, " with ", updated);
@@ -55,7 +51,6 @@ export function AddTask() {
   }
 
   function deleteTimeframe(index: number) {
-    // console.log("deleting", timeframes[index]);
     setTimeframes((prev) =>
       prev.filter((tf, i) => {
         if (i !== index) {
@@ -63,20 +58,6 @@ export function AddTask() {
         }
       }),
     )
-  }
-
-  const onSave = async () => {
-    if (!name || timeframes.length === 0) return
-    const newTask = new TaskModel(
-
-      "",
-      name,
-      priority,
-      timeframes,
-
-    )
-    createTask(newTask)
-    return
   }
 
   return <div className={styles.container}>

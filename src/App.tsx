@@ -17,7 +17,6 @@ function App() {
     fetch(`${import.meta.env.VITE_URL}/task/test`)
       .then(res => res.json())
       .then(data => setMessage(data.working));
-    console.log("IS WORKING: ",message)
   }, [message]);
 
 

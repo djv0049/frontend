@@ -14,7 +14,6 @@ export function DayView() {
         setTaskList(body);
       }
       catch {
-        console.log("ERROER")
       }
     }
     load()
