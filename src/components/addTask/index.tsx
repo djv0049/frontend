@@ -7,6 +7,7 @@ import { daysEnum } from "../../types/days"
 import type { TaskTimeframeType } from "../../types/taskTimeframe"
 import { CreateTaskButton } from "../buttons/createTaskButton"
 import styles from './index.module.scss'
+import { TimeFrameEdit } from "../timeframeEdit"
 
 //type frequency = "never" | "daily" | "weekly" | "monthly | yearly"
 
@@ -42,15 +43,16 @@ export function AddTask() {
   }
 
 
-  const updateTimeframe = useCallback((index: number, updated: Partial<TaskTimeframeModel>) => {
+  const updateTimeframe = (index: number, updated: Partial<TaskTimeframeType>) => {
     // console.log("updating timeframe array for ", { title }, " with ", updated);
     setTimeframes((prev) =>
       prev.map((tf, i) => {
-        const times = i === index ? { ...tf, ...updated } : tf
-        return new TaskTimeframeModel(times)
+        const times: TaskTimeframeType = i === index ? { ...tf, ...updated } : tf
+        console.log("times for timeframe ", index, updated)
+        return times
       }),
     )
-  }, [])
+  }
 
   function deleteTimeframe(index: number) {
     // console.log("deleting", timeframes[index]);
@@ -71,7 +73,7 @@ export function AddTask() {
       name,
       priority,
       timeframes,
-    
+
     )
     createTask(newTask)
     return
@@ -110,23 +112,16 @@ export function AddTask() {
 
     {isRepeating ? (<>
       <div className={styles.inputContainerContainer}>
-        {/* TODO: create timeframe component*/}
         <IconButton onClick={() => addTimeframe()} >➕ Timeframe </IconButton>
-        { timeframes.map((tf) => {
-          return (
-          <div>
-              start {tf.start}
-            </div>
-          )
-        })
+        {timeframes.map(
+          (tf, i) => {
+            return (
+              <div className={styles.timeframeContainer} key={"timeframe"+{i}}>
+                <TimeFrameEdit index={i} updateTimeframe={updateTimeframe} />
+              </div>
+            )
+          })
         }
-
-        <div className={styles.timeframe}>
-          
-
-        </div>
-
-
       </div>
     </>) : (
       <>
