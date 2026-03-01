@@ -81,6 +81,7 @@ export class TaskModel implements task {
   }
 
   currentTimeframe(): (TaskTimeframeType | null) {
+    console.log("timeframes:", this.name, this.timeframes)
     if (!this.timeframes || !this.timeframes.length) return null
     const relevantToday = this.timeframes.map((tf) => { return tf.days?.find((x) => moment(new Date()).day() === x) ? tf : null })
     if (!relevantToday || !relevantToday.length) return null
@@ -88,12 +89,13 @@ export class TaskModel implements task {
       return moment(tf.start, "HH:mm").isAfter(moment()) && moment(tf.finish, "HH:mm").isBefore(moment()) ? tf : null
     })
     if (!relevantNow || !relevantNow.length) return null
+    console.log(relevantNow)
     return relevantNow[0]
   }
 
   currentlyRelevant(): boolean {
     // NOTE: temp code to handle legacy objects before their deletion
-    if (this.startTime && this.endTime) { return moment(this.startTime, "HH:mm").isBefore(moment()) && moment(this.endTime, "HH:mm").isAfter(moment()) && !this.doneToday() }
+    if (this.startTime && this.endTime) { return moment(this.startTime, "HH:mm").isBefore(moment(new Date(), "HH:mm")) && moment(this.endTime, "HH:mm").isAfter(moment()) && !this.doneToday() }
     // NOTE: end of temp code
 
     if (this.currentTimeframe())

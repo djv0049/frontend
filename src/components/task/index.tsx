@@ -8,7 +8,7 @@ type props = {
 export function Task(props: props) {
   const { task, scaleDown } = props
   const { showDelete } = props || false
-  const proportional = 1.5 - (scaleDown * 0.03)
+  const proportional = 1.1 - (scaleDown * 0.03)
   console.log(scaleDown)
   console.log(proportional)
 
