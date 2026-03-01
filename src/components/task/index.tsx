@@ -9,20 +9,17 @@ export function Task(props: props) {
   const { task, scaleDown } = props
   const { showDelete } = props || false
   const proportional = 1.1 - (scaleDown * 0.03)
-  console.log(scaleDown)
-  console.log(proportional)
-
 
   return (
     <div style={{
-      zIndex:`${999-proportional}`,
-      background: `rgba(${scaleDown*10},${scaleDown*10},${scaleDown*10},${100-scaleDown*20})`,
+      zIndex: `${999 - proportional}`,
+      background: `rgba(${scaleDown * 10},${scaleDown * 10},${scaleDown * 10},${100 - scaleDown * 20})`,
       scale: proportional,
-      width: "100%",
       borderRadius: `${proportional}rem`,
       border: 'solid',
       padding: `${proportional}rem`,
-      margin: `${proportional }rem`,
+      marginBottom: `${proportional}rem`,
+      marginTop: `${proportional}rem`,
       display: "flex",
       flexDirection: "row",
       justifyContent: "space-between",
@@ -37,8 +34,8 @@ export function Task(props: props) {
           <div>{task.priority}</div>
         </div>
         <div style={{ display: "flex", flexDirection: "row" }}>
-          <div>Times:</div>
-          <div>{ }</div>
+          <div>Times: </div>
+          <div>{task.timeframes.map((tf, i) => { return <div key={"tf" + i}> start: {tf.start} finish: {tf.finish} </div> })}</div>
         </div>
       </div>
 

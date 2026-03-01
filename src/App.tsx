@@ -24,12 +24,12 @@ function App() {
 
   return (
     <div style={{ width: '90vw', height: '90vh', justifyContent: 'space-between', display: 'flex', flexDirection: 'row' }} >
-      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', alignContent: 'center' }}>
         <NavigationPanel setPage={setpage} />
         <Meta />
       </div>
-      <div> {/*main container*/}
-        <h1>connected to backend = "{message}"</h1>
+      <div style={{justifyContent:"center"}}> {/*main container*/}
+        <h1>General Life Admin</h1>
         {page == 'now' && (
           <Now />)}
         {page == 'tasks' && (

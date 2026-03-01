@@ -32,7 +32,7 @@ export function AddTask() {
 
 
   const handleCreateButtonClick = () => {
-    createTask({ name, startTime, endTime, date, priority, isStreak })
+    createTask({ name, startTime, endTime, date, priority, isStreak, timeframes })
   }
 
 

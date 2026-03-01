@@ -73,7 +73,7 @@ export class TaskModel implements task {
 
   updateStreak() {
     if (!this.streakCount) this.streakCount = 0
-    if (this.doneToday())
+    if (!this.doneToday())
       this.streakCount += 1
   }
   updateTask() {
@@ -98,8 +98,10 @@ export class TaskModel implements task {
     if (this.startTime && this.endTime) { return moment(this.startTime, "HH:mm").isBefore(moment(new Date(), "HH:mm")) && moment(this.endTime, "HH:mm").isAfter(moment()) && !this.doneToday() }
     // NOTE: end of temp code
 
-    if (this.currentTimeframe())
-      console.log("Current timeframe length", this.currentTimeframe())
+    const current = this.currentTimeframe()
+    if (current)
+      if (this.doneToday()) return false
+    console.log("Current timeframe", current)
     return true
   }
 
