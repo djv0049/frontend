@@ -117,7 +117,7 @@ export class TaskModel implements task {
     if (!this.currentTimeframe) return this
     //this.history.push({ event: 'postponed', at: new Date() })
 
-    const minutesModifier = 10
+    const minutesModifier = 15
     let end = moment(this.currentTimeframe()?.finish, "HH:mm")
     let start = moment(this.currentTimeframe()?.start, "HH:mm")
 

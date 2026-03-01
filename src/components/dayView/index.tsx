@@ -14,6 +14,7 @@ export function DayView() {
         setTaskList(body);
       }
       catch {
+        console.warn("error retrieving things")
       }
     }
     load()
@@ -27,7 +28,7 @@ export function DayView() {
           ? -1 
           : 1)
         .map((task:TaskModel) => {
-          return 
+          return  task
 
         })}
 

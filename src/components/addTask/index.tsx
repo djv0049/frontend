@@ -54,7 +54,7 @@ export function AddTask() {
     setTimeframes((prev) =>
       prev.filter((tf, i) => {
         if (i !== index) {
-          return new TaskTimeframeModel(tf)
+          return (tf)
         }
       }),
     )
@@ -98,7 +98,7 @@ export function AddTask() {
           (tf, i) => {
             return (
               <div className={styles.timeframeContainer} key={"timeframe"+{i}}>
-                <TimeFrameEdit index={i} updateTimeframe={updateTimeframe} />
+                <TimeFrameEdit t={timeframes[i]}index={i} updateTimeframe={updateTimeframe} />
               </div>
             )
           })
