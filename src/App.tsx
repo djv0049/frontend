@@ -28,7 +28,7 @@ function App() {
         <Meta />
       </div>
       <div style={{justifyContent:"center"}}> {/*main container*/}
-        <h1>General Life Admin</h1>
+        <h1>General Life Administration</h1>
         {page == 'now' && (
           <Now />)}
         {page == 'tasks' && (
