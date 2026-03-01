@@ -94,10 +94,6 @@ export class TaskModel implements task {
   }
 
   currentlyRelevant(): boolean {
-    // NOTE: temp code to handle legacy objects before their deletion
-    if (this.startTime && this.endTime) { return moment(this.startTime, "HH:mm").isBefore(moment(new Date(), "HH:mm")) && moment(this.endTime, "HH:mm").isAfter(moment()) && !this.doneToday() }
-    // NOTE: end of temp code
-
     const current = this.currentTimeframe()
     if (current)
       if (this.doneToday()) return false
