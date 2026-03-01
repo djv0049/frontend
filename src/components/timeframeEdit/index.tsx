@@ -7,10 +7,11 @@ type timeframeComponentProps = {
   index: number
   startTime?: Moment
   endTime?: Moment
+  edit?: boolean // requires updateTimeframe
   showDelete?: boolean
   compact?: boolean
   t?: TaskTimeframeType
-  updateTimeframe: (index: number, updated: Partial<TaskTimeframeType>) => void
+  updateTimeframe?: (index: number, updated: Partial<TaskTimeframeType>) => void
 }
 
 
@@ -21,47 +22,51 @@ type day = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturda
 // TODO: DAYS
 export function TimeFrameEdit(props: timeframeComponentProps) {
 
-  const { t, index, updateTimeframe } = props
+  const { edit, t, index, updateTimeframe } = props
 
   const toggleDay = (day: string) => {
-    console.log(day)
-    if (!t) return
-    console.log(day)
+    if (!t || !updateTimeframe) return
     const newDays = (t.days ?? []).includes(day as daysEnum)
       ? t.days!.filter((dayName) => dayName !== day)
       : [...(t.days ?? []), day]
     updateTimeframe(index, { days: newDays as daysEnum[] })
   }
 
-  return (<div className={styles.timeframe}>
-    <div className={styles.inputContainer}>
-      <p>Start Time</p>
-      <input
-        className={styles.inputField}
-        type='time'
-        onChange={(e) => updateTimeframe(index, { start: e.target.value })}
-      />
-    </div>
+  return (
+    <>
+      {edit && updateTimeframe ? (
+        <div className={styles.timeframe}>
+          <div className={styles.inputContainer}>
+            <p>Start Time</p>
+            <input
+              className={styles.inputField}
+              type='time'
+              onChange={(e) => updateTimeframe(index, { start: e.target.value })}
+            />
+          </div>
 
-    <div className={styles.inputContainer}>
-      <p>End Time</p>
-      <input
-        className={styles.inputField}
-        type='time'
-        onChange={(e) => updateTimeframe(index, { finish: e.target.value })}
-      />
-    </div>
-    <div className={styles.inputContainer}>
+          <div className={styles.inputContainer}>
+            <p>End Time</p>
+            <input
+              className={styles.inputField}
+              type='time'
+              onChange={(e) => updateTimeframe(index, { finish: e.target.value })}
+            />
+          </div>
+        </div >
+      ) : (
+        <p>🕰️ {t?.start} ➡️ {t?.finish} </p>
+      )}
+      <div className={edit ? styles.inputContainer: styles.compactContainer}>
         {Object.values(daysEnum)
           .filter((key) => typeof key === 'string')
           .map((day: string) => {
             const hasDay = t && t.days?.find((dayday) => dayday === day)
             return (
-              < ToggleText callback={() => toggleDay(day)} key={day} active={hasDay} text={day.slice(0, 1).toUpperCase()} />
+              < ToggleText edit={!!edit} callback={() => toggleDay(day)} key={day} active={!!hasDay} text={day.slice(0, 1).toUpperCase()} />
             )
-            // TODO: tiny grid with calendar days filled in
           })}
-    </div>
-  </div >
+      </div>
+    </>
   )
 }

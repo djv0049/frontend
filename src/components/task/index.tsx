@@ -1,4 +1,5 @@
 import type { TaskModel as taskClass } from "../../models/task"
+import { TimeFrameEdit } from "../timeframeEdit"
 
 type props = {
   task: taskClass
@@ -20,35 +21,48 @@ export function Task(props: props) {
       padding: `${proportional}rem`,
       marginBottom: `${proportional}rem`,
       marginTop: `${proportional}rem`,
-      display: "flex",
-      flexDirection: "row",
-      justifyContent: "space-between",
+      // TODO: move minwidth somewhere more useful/ better
+      minWidth: "30vw",
     }}>
-      <div>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <div>Name:</div>
-          <div>{task.name}</div>
+      <div style={{
+        display: "flex",
+        flexDirection: "row",
+        justifyContent: "space-between",
+      }}>
+        <div>
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <div><h1>{task.name}</h1></div>
+          </div>
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <div>P{task.priority}</div>
+          </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <div>priority:</div>
-          <div>{task.priority}</div>
+
+        <div>
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+            {showDelete ? (<button style={{ color: "red", padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markComplete())}>󰆴</button>) : (
+
+              <>
+                <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markComplete())}>✅</button>
+                <button style={{ padding: "0.5rem", margin: "0.1rem" }}>⏲️</button>
+                <button style={{ padding: "0.5rem", margin: "0.1rem" }}>❌</button>
+              </>
+            )}
+          </div>
         </div>
-        <div style={{ display: "flex", flexDirection: "row" }}>
-          <div>Times: </div>
-          <div>{task.timeframes.map((tf, i) => { return <div key={"tf" + i}> start: {tf.start} finish: {tf.finish} </div> })}</div>
-        </div>
+
       </div>
-
-      <div>
-        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-          {showDelete ? (<button style={{ color: "red", padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markComplete())}>󰆴</button>) : (
-
-            <>
-              <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markComplete())}>✅</button>
-              <button style={{ padding: "0.5rem", margin: "0.1rem" }}>⏲️</button>
-              <button style={{ padding: "0.5rem", margin: "0.1rem" }}>❌</button>
-            </>
-          )}
+      <div style={{ display: "flex", flexDirection: "column" }}>
+        <div>
+          {task.timeframes.map((tf, i) => {
+            return (
+              <TimeFrameEdit
+                key={'tf' + i} t={tf}
+                index={i}
+                compact={true}
+              />
+            )
+          })}
         </div>
       </div>
     </div>

@@ -25,3 +25,13 @@
   width: 30%;
   padding: 1rem;
 }
+
+.compactContainer { 
+  display: flex ;
+  flex-direction: row;
+  justify-content:space-between;
+  padding-left: 0.3rem;
+  padding-right: 0.3rem;
+  background: grey;
+  border-radius: 0.5rem;
+}
