@@ -93,12 +93,12 @@ export function AddTask() {
 
     {isRepeating ? (<>
       <div className={styles.inputContainerContainer}>
-        <IconButton onClick={() => addTimeframe()} >➕ Timeframe </IconButton>
+        <IconButton onClick={() => addTimeframe()} >➕ Timeframe</IconButton>
         {timeframes.map(
           (tf, i) => {
             return (
               <div className={styles.timeframeContainer} key={"timeframe"+{i}}>
-                <TimeFrameEdit t={timeframes[i]}index={i} updateTimeframe={updateTimeframe} />
+                <TimeFrameEdit t={timeframes[i]} index={i} updateTimeframe={updateTimeframe} />
               </div>
             )
           })

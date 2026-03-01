@@ -14,17 +14,17 @@ export function ToggleText({
       onClick={callback}
       style={{
         borderRadius: 8,
-        backgroundColor: "gray"
+        backgroundColor: "gray",
+        margin: 0,
+        padding: 0,
+        minWidth: "12%"
       }}
     >
       <p
         style={{
           fontSize: 18,
-
-          marginLeft: 16,
-          marginRight: 16,
-          marginTop: 8,
-          marginBottom: 8,
+          margin: 0,
+          padding: 0,
           borderWidth: 0,
           color: active ? "red" : "blue",
           fontWeight: active ? 'bold' : 'normal',

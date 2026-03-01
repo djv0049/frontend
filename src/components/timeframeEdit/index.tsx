@@ -26,7 +26,7 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
   const toggleDay = (day: string) => {
     console.log(day)
     if (!t) return
-  console.log(day)
+    console.log(day)
     const newDays = (t.days ?? []).includes(day as daysEnum)
       ? t.days!.filter((dayName) => dayName !== day)
       : [...(t.days ?? []), day]
@@ -51,18 +51,17 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
         onChange={(e) => updateTimeframe(index, { finish: e.target.value })}
       />
     </div>
-
-    {Object.values(daysEnum)
-      .filter((key) => typeof key === 'string')
-      .map((day: string) => {
-        const hasDay = t && t.days?.find((dayday) => dayday === day)
-        return (
-          <div key={day} >
-            {< ToggleText callback={() => toggleDay(day)} active={hasDay} text={day.slice(0, 1).toUpperCase()} />}
-          </div >
-        )
-        // TODO: tiny grid with calendar days filled in
-      })}
+    <div className={styles.inputContainer}>
+        {Object.values(daysEnum)
+          .filter((key) => typeof key === 'string')
+          .map((day: string) => {
+            const hasDay = t && t.days?.find((dayday) => dayday === day)
+            return (
+              < ToggleText callback={() => toggleDay(day)} key={day} active={hasDay} text={day.slice(0, 1).toUpperCase()} />
+            )
+            // TODO: tiny grid with calendar days filled in
+          })}
+    </div>
   </div >
   )
 }
