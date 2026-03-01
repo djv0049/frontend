@@ -56,8 +56,10 @@ export class TaskModel implements task {
   }
 
   doneYesterday() {
-    if (!this.lastCompleted) return false
-    return this.lastCompleted && this.lastCompleted >= moment(new Date()).subtract(1, 'day').startOf('day').toDate()
+    const done = this.lastCompleted
+    if (done == undefined) return false
+    const yesterday = moment().subtract(1, 'day').startOf('day').toDate()
+    return done >= yesterday
   }
 
   markComplete() {
@@ -77,8 +79,18 @@ export class TaskModel implements task {
     if (!this.doneToday())
       this.streakCount += 1
   }
+
   updateTask() {
     updateTask(this)
+  }
+
+  doneThisTimeframe(): boolean {
+    const current = this.currentTimeframe()
+    if (current && this.lastCompleted)
+      if ( this.lastCompleted > new Date(current.start)
+        && this.lastCompleted < new Date(current.finish))
+        return true
+    return false
   }
 
   currentTimeframe(): (TaskTimeframeType | null) {
@@ -93,10 +105,9 @@ export class TaskModel implements task {
   }
 
   currentlyRelevant(): boolean {
-    const current = this.currentTimeframe()
     if (this.isStreak && this.doneToday()) return false
-    if (!this.isStreak && current == null) return false
-    if (current) return true
+    if (!this.isStreak && this.doneThisTimeframe()) return false
+    if (this.doneThisTimeframe()) return false
     console.warn(this.name, "WENT PAST ALL CHECKS")
     return true
   }
@@ -104,7 +115,6 @@ export class TaskModel implements task {
   async doLater() {
     /**Adds "postPoned" to the history of task and pushes the task back x minutes*/
     if (!this.currentTimeframe) return this
-
     //this.history.push({ event: 'postponed', at: new Date() })
 
     const minutesModifier = 10
