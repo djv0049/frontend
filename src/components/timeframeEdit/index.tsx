@@ -8,12 +8,11 @@ type timeframeComponentProps = {
   updateTimeframe: (index: number, updated: Partial<TaskTimeframeType>) => void
 
 }
+// NOTE: add in the start and end time for editing tasks, no need for adding new ones 
 
+// TODO: DAYS
 export function TimeFrameEdit(props: timeframeComponentProps) {
-  const { index, startTime, endTime, updateTimeframe } = props
-  console.log("timeframe index: ", index)
-  console.log("start time: ", startTime)
-  console.log("end time: ", endTime)
+  const { index, updateTimeframe } = props
   return (<div className={styles.timeframe}>
     <div className={styles.inputContainer}>
       <p>Start Time</p>
