@@ -14,7 +14,7 @@ export function ToggleText({
 }) {
   return (
     <>
-      {compact ? (
+      {!compact ? (
         <Button
           onClick={callback}
           style={{

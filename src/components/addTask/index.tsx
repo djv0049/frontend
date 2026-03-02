@@ -1,13 +1,11 @@
 import { Checkbox, IconButton } from "@mui/material"
 import moment from "moment"
-import React, { useCallback, useState } from "react"
+import React, { useState } from "react"
 import { createTask } from "../../api/task"
-import { TaskModel } from "../../models/task"
-import { daysEnum } from "../../types/days"
 import type { TaskTimeframeType } from "../../types/taskTimeframe"
 import { CreateTaskButton } from "../buttons/createTaskButton"
-import styles from './index.module.scss'
 import { TimeFrameEdit } from "../timeframeEdit"
+import styles from './index.module.scss'
 
 //type frequency = "never" | "daily" | "weekly" | "monthly | yearly"
 
@@ -27,7 +25,7 @@ export function AddTask() {
   const defaultTaskTimeframe: TaskTimeframeType = {
     start: moment().format("HH:mm"),
     finish: moment().add(1, 'hour').format("HH:mm"),
-    days: [daysEnum.sunday]
+    days: []
   }
 
   const handleCreateButtonClick = () => {
@@ -97,8 +95,13 @@ export function AddTask() {
         {timeframes.map(
           (tf, i) => {
             return (
-              <div className={styles.timeframeContainer} key={"timeframe"+{i}}>
-                <TimeFrameEdit t={timeframes[i]} index={i} updateTimeframe={updateTimeframe} />
+              <div className={styles.timeframeContainer} key={"timeframe" + { i }}>
+                <TimeFrameEdit
+                  t={timeframes[i]}
+                  edit={true}
+                  index={i}
+                  updateTimeframe={updateTimeframe} 
+                />
               </div>
             )
           })

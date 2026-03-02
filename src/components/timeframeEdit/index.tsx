@@ -19,10 +19,10 @@ type timeframeComponentProps = {
 type day = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday"
 // NOTE: add in the start and end time for editing tasks, no need for adding new ones 
 
-// TODO: DAYS
+// FIXME: DAYS
 export function TimeFrameEdit(props: timeframeComponentProps) {
 
-  const { edit, t, index, updateTimeframe } = props
+  const { compact, edit, t, index, updateTimeframe } = props
 
   const toggleDay = (day: string) => {
     if (!t || !updateTimeframe) return
@@ -57,7 +57,7 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
       ) : (
         <p>🕰️ {t?.start} ➡️ {t?.finish} </p>
       )}
-      <div className={edit ? styles.inputContainer: styles.compactContainer}>
+      <div className={edit ? styles.inputContainer : styles.compactContainer}>
         {Object.values(daysEnum)
           .filter((key) => typeof key === 'string')
           .map((day: string) => {

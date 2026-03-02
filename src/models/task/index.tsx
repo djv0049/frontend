@@ -2,6 +2,7 @@ import moment from "moment"
 import type { task } from "../../types/task"
 import { updateTask } from "../../api/task"
 import type { TaskTimeframeType } from "../../types/taskTimeframe"
+import { daysEnum } from "../../types/days"
 
 export class TaskModel implements task {
   _id: any
@@ -84,10 +85,51 @@ export class TaskModel implements task {
     updateTask(this)
   }
 
+  doneLastTimeframe(): boolean {
+    console.log(this.name, "Has timeframe?")
+    const tf = this.timeframes
+    console.log("how many timeframe", tf)
+    const tfl = this.timeframes.length
+    console.log("last timeframe?", tfl)
+    const tfhd = this.timeframes[0].days
+    console.log("timeframe 0 has days", tfhd)
+    const tfdl = this.timeframes[0].days?.length
+    console.log("timeframe 0 has ", tfdl, " days")
+    const tfdht = this.timeframes[0].days?.[0]
+    console.log("timeframe 0 day 0 is ", tfdht)
+
+    return false
+    /*if (!tf) return false
+    for (let i = 0; i < tfl; i++) {
+      if (!this.timeframes[i].days?.length) return false
+      console.log("timeframe", i)
+      for (let j = 0; j < this.timeframes[i].days?.length; j++) {
+        return !!this.timeframes[i].days[j]
+      }
+    }*/
+  }
+  relevantToday(): boolean {
+    const todayDay = moment().day() - 1
+    console.log(daysEnum[todayDay])
+    console.log(todayDay)
+    const c = this.timeframes.some((tf) => {
+      const x = tf.days?.some((x) => {
+        console.log(this.name, "day", daysEnum[x])
+        return daysEnum[todayDay] == daysEnum[x]
+
+      })
+      console.log(x)
+      return x
+    })
+    console.log("relevantToday", c)
+    return c
+  }
+
+
   doneThisTimeframe(): boolean {
     const current = this.currentTimeframe()
     if (current && this.lastCompleted)
-      if ( this.lastCompleted > new Date(current.start)
+      if (this.lastCompleted > new Date(current.start)
         && this.lastCompleted < new Date(current.finish))
         return true
     return false
@@ -95,8 +137,8 @@ export class TaskModel implements task {
 
   currentTimeframe(): (TaskTimeframeType | null) {
     if (!this.timeframes || !this.timeframes.length) return null
-    const relevantToday = this.timeframes.map((tf) => { return tf.days?.find((x) => moment(new Date()).day() === x) ? tf : null })
-    if (!relevantToday || !relevantToday.length) return null
+    if (!this.relevantToday()) return null
+  console.log("is relevant!")
     const relevantNow = this.timeframes.map((tf) => {
       return moment(tf.start, "HH:mm").isAfter(moment()) && moment(tf.finish, "HH:mm").isBefore(moment()) ? tf : null
     })
@@ -105,9 +147,10 @@ export class TaskModel implements task {
   }
 
   currentlyRelevant(): boolean {
+    //console.log(this.doneLastTimeframe())
     if (this.isStreak && this.doneToday()) return false
-    if (!this.isStreak && this.doneThisTimeframe()) return false
     if (this.doneThisTimeframe()) return false
+    if (!this.currentTimeframe()) return false
     console.warn(this.name, "WENT PAST ALL CHECKS")
     return true
   }
