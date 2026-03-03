@@ -95,7 +95,7 @@ export function AddTask() {
         {timeframes.map(
           (timeframe, i) => {
             return (
-              <div className={styles.timeframeContainer} key={"timeframe" + { i }}>
+              <div className={styles.timeframeContainer} key={"timeframeAdd" +  i }>
                 <TimeFrameEdit
                   t={timeframe}
                   edit={true}
