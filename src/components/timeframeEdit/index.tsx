@@ -3,6 +3,7 @@ import type { TaskTimeframeType } from '../../types/taskTimeframe';
 import { ToggleText } from '../toggleText';
 import styles from './index.module.scss'
 import type { Moment } from "moment";
+import { InputField } from '../fields/inputField';
 type timeframeComponentProps = {
   index: number
   startTime?: Moment
@@ -33,26 +34,21 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
   }
 
   return (
-    <>
+    <div className={styles.container}>
       {edit && updateTimeframe ? (
         <div className={styles.timeframe}>
-          <div className={styles.inputContainer}>
-            <p>Start Time</p>
-            <input
-              className={styles.inputField}
-              type='time'
-              onChange={(e) => updateTimeframe(index, { startTime: e.target.value })}
-            />
-          </div>
 
-          <div className={styles.inputContainer}>
-            <p>End Time</p>
-            <input
-              className={styles.inputField}
-              type='time'
-              onChange={(e) => updateTimeframe(index, { endTime: e.target.value })}
-            />
-          </div>
+          <InputField 
+            title="Start"
+            type="time"
+            updateValue={(e => updateTimeframe(index, {startTime: e.target.value}))}
+          />
+          <InputField 
+            title="End"
+            type="time"
+            updateValue={(e => updateTimeframe(index, {endTime: e.target.value}))}
+          />
+
         </div >
       ) : (
         <p>🕰️ {t?.startTime} ➡️ {t?.endTime} </p>
@@ -67,6 +63,6 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
             )
           })}
       </div>
-    </>
+    </div>
   )
 }

@@ -1,4 +1,11 @@
+.container {
+  border: solid;
+  margin: 0.1rem;
+  border-color: red;
+  border-width: 0.1rem;
+  border-radius: 1rem;
 
+}
 .inputContainer {
   display: flex ;
   flex-direction: row;
