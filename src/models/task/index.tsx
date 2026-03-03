@@ -85,6 +85,7 @@ export class TaskModel implements task {
   }
 
   doneLastTimeframe(): boolean {
+    /*
     console.log(this.name, "Has timeframe?")
     const tf = this.timeframes
     console.log("how many timeframe", tf)
@@ -96,7 +97,7 @@ export class TaskModel implements task {
     console.log("timeframe 0 has ", tfdl, " days")
     const tfdht = this.timeframes[0].days?.[0]
     console.log("timeframe 0 day 0 is ", tfdht)
-
+*/
     return false
     /*if (!tf) return false
     for (let i = 0; i < tfl; i++) {
@@ -109,19 +110,7 @@ export class TaskModel implements task {
   }
   relevantToday(): boolean {
     const todayDay = moment.weekdays(moment().weekday())
-    console.log("---------------")
-    console.log(this.name)
-    console.log("today: ", todayDay)
-    const c = this.timeframes.some((tf) => {
-      const x = tf.days?.some((day) => {
-        console.log("task day: ", day)
-        return todayDay == day
-
-      })
-      console.log(x)
-      return x
-    })
-    console.log("relevantToday", c)
+    const c = this.timeframes.some((tf) => tf.days?.some((day) => todayDay == day))
     return c
   }
 
@@ -135,23 +124,36 @@ export class TaskModel implements task {
     return false
   }
 
+  isNowInTimeframeTime(timeframe: { startTime: string, endTime: string }) {
+    // Assumes timeframe IS valid today, just checks the start and end
+    const start = moment(timeframe.startTime, "HH:mm")
+    //console.log("start", start)
+    const end = moment(timeframe.endTime, "HH:mm")
+    //console.log("end", end)
+    const now = moment()
+    //console.log("start is before now", start.isBefore(now))
+    //console.log("end is after now", end.isAfter(now))
+    //console.log("done today", !this.doneToday())
+    //console.log("all", start.isBefore(now) && end.isAfter(now) && !this.doneToday())
+    return start.isBefore(now) && end.isAfter(now) && !this.doneToday()
+  }
+
   currentTimeframe(): (TaskTimeframeType | null) {
     if (!this.timeframes || !this.timeframes.length) return null
     if (!this.relevantToday()) return null
-    const relevantNow = this.timeframes.filter((timeframe) => {
-      const [start, end] = [timeframe.startTime, timeframe.endTime].map(time => moment(time, "HH:mm"))
-      const now = moment()
-      return start.isBefore(now) && end.isAfter(now) && !this.doneToday()
-    })
+    const relevantNow = this.timeframes.filter((timeframe) =>
+      this.isNowInTimeframeTime(timeframe)
+    )
+    //console.log("relevant current timeframe ", relevantNow)
     if (!relevantNow || !relevantNow.length) return null
     return relevantNow[0]
   }
 
   currentlyRelevant(): boolean {
     if (!!this.startTime && !!this.endTime) {
-      const [start, end] = [this.startTime, this.endTime].map(time => moment(time, "HH:mm"))
-      const now = moment()
-      return start.isBefore(now) && end.isAfter(now) && !this.doneToday()
+      const { startTime, endTime } = this
+      console.log(this.name, "start time", startTime)
+      return this.isNowInTimeframeTime({ startTime, endTime })
     }
     //console.log(this.doneLastTimeframe())
     if (this.isStreak && this.doneToday()) return false

@@ -63,7 +63,7 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
           .map((weekday: string) => {
             const hasDay = t && t.days?.find((dayday) => dayday === weekday)
             return (
-              < ToggleText edit={!!edit} callback={() => toggleDay(weekday)} key={weekday} active={!!hasDay} text={weekday.slice(0, 1).toUpperCase()} />
+              < ToggleText edit={!!edit} callback={() => toggleDay(weekday)} key={`${t}${weekday}`} active={!!hasDay} text={weekday.slice(0, 1).toUpperCase()} />
             )
           })}
       </div>
