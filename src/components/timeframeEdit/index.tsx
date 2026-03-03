@@ -20,7 +20,6 @@ type timeframeComponentProps = {
 type dayName = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday"
 // NOTE: add in the start and end time for editing tasks, no need for adding new ones 
 
-// FIXME: DAYS
 export function TimeFrameEdit(props: timeframeComponentProps) {
 
   const { compact, edit, t, index, updateTimeframe } = props
@@ -33,20 +32,21 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
     updateTimeframe(index, { days: newDays as dayName[] })
   }
 
+
   return (
     <div className={styles.container}>
       {edit && updateTimeframe ? (
         <div className={styles.timeframe}>
-
-          <InputField 
+          <button>delete</button>
+          <InputField
             title="Start"
             type="time"
-            updateValue={(e => updateTimeframe(index, {startTime: e.target.value}))}
+            updateValue={(e => updateTimeframe(index, { startTime: e.target.value }))}
           />
-          <InputField 
+          <InputField
             title="End"
             type="time"
-            updateValue={(e => updateTimeframe(index, {endTime: e.target.value}))}
+            updateValue={(e => updateTimeframe(index, { endTime: e.target.value }))}
           />
 
         </div >

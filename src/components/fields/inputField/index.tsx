@@ -5,10 +5,11 @@ type inputFieldProps = {
   title: string
   type: string
   value?: any
+  placeholder?: string
   updateValue: (e: ChangeEvent<HTMLInputElement, Element>) => void
 }
 export function InputField(props: inputFieldProps) {
-  const { value, type, title, updateValue } = props
+  const { value, type, title, updateValue, placeholder } = props
 
   return (
     <div className={styles.inputContainer}>
@@ -16,8 +17,9 @@ export function InputField(props: inputFieldProps) {
       <input
         className={styles.input}
         type={type}
+        placeholder={placeholder || ''}
         onChange={(e) => updateValue(e)}
-        value={value}
+        value={value || ''}
       />
     </div>
   )

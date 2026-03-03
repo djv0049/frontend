@@ -6,6 +6,7 @@ import type { TaskTimeframeType } from "../../types/taskTimeframe"
 import { CreateTaskButton } from "../buttons/createTaskButton"
 import { TimeFrameEdit } from "../timeframeEdit"
 import styles from './index.module.scss'
+import { InputField } from "../fields/inputField"
 
 //type frequency = "never" | "daily" | "weekly" | "monthly | yearly"
 
@@ -60,24 +61,20 @@ export function AddTask() {
 
   return <div className={styles.container}>
 
-    <div className={styles.inputContainer}>
-      <p>Name</p>
-      <input
-        className={styles.inputField}
-        placeholder="Do the thing!"
-        onChange={(e) => setName(e.target.value)}
+    <InputField
+      title="Name"
+      type='text'
+      placeholder="I will achieve"
+      value={name}
+      updateValue={(e => setName(e.target.value))}
       />
-    </div>
-
-    <div className={styles.inputContainer}>
-      <p>Priority</p>
-      <input
-        className={styles.inputField}
-        placeholder="5"
-        type='number'
-        onChange={(e) => setPriority(Number(e.target.value))}
+    <InputField
+      title="Priority"
+      type='number'
+      placeholder="5"
+      updateValue={e => setPriority(Number(e.target.value))}
+      value={priority}
       />
-    </div>
 
     <div className={styles.inputContainer}>
       <p>Repeating</p>
@@ -91,7 +88,6 @@ export function AddTask() {
 
     {isRepeating ? (<>
       <div className={styles.inputContainerContainer}>
-        <IconButton onClick={() => addTimeframe()} >➕ Timeframe</IconButton>
         {timeframes.map(
           (timeframe, i) => {
             return (
@@ -101,11 +97,14 @@ export function AddTask() {
                   edit={true}
                   index={i}
                   updateTimeframe={updateTimeframe} 
+
                 />
               </div>
             )
           })
         }
+
+        <IconButton onClick={() => addTimeframe()} >➕ Timeframe</IconButton>
       </div>
     </>) : (
       <>
