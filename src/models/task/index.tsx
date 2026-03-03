@@ -129,8 +129,8 @@ export class TaskModel implements task {
   doneThisTimeframe(): boolean {
     const current = this.currentTimeframe()
     if (current && this.lastCompleted)
-      if (this.lastCompleted > new Date(current.start)
-        && this.lastCompleted < new Date(current.finish))
+      if (this.lastCompleted > new Date(current.startTime)
+        && this.lastCompleted < new Date(current.endTime))
         return true
     return false
   }
@@ -138,9 +138,8 @@ export class TaskModel implements task {
   currentTimeframe(): (TaskTimeframeType | null) {
     if (!this.timeframes || !this.timeframes.length) return null
     if (!this.relevantToday()) return null
-    console.log("is relevant!")
     const relevantNow = this.timeframes.filter((timeframe) => {
-      const [start, end] = [timeframe.start, timeframe.finish].map(time => moment(time, "HH:mm"))
+      const [start, end] = [timeframe.startTime, timeframe.endTime].map(time => moment(time, "HH:mm"))
       const now = moment()
       return start.isBefore(now) && end.isAfter(now) && !this.doneToday()
     })
@@ -168,8 +167,8 @@ export class TaskModel implements task {
     //this.history.push({ event: 'postponed', at: new Date() })
 
     const minutesModifier = 15
-    let end = moment(this.currentTimeframe()?.finish, "HH:mm")
-    let start = moment(this.currentTimeframe()?.start, "HH:mm")
+    let end = moment(this.currentTimeframe()?.endTime, "HH:mm")
+    let start = moment(this.currentTimeframe()?.startTime, "HH:mm")
 
     const endOfToday = moment().endOf("day").format("HH:mm")
 

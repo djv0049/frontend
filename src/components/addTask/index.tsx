@@ -23,8 +23,8 @@ export function AddTask() {
   const [timeframes, setTimeframes] = useState<TaskTimeframeType[]>([])
 
   const defaultTaskTimeframe: TaskTimeframeType = {
-    start: moment().format("HH:mm"),
-    finish: moment().add(1, 'hour').format("HH:mm"),
+    startTime: moment().format("HH:mm"),
+    endTime: moment().add(1, 'hour').format("HH:mm"),
     days: []
   }
 

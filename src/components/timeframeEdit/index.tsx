@@ -41,7 +41,7 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
             <input
               className={styles.inputField}
               type='time'
-              onChange={(e) => updateTimeframe(index, { start: e.target.value })}
+              onChange={(e) => updateTimeframe(index, { startTime: e.target.value })}
             />
           </div>
 
@@ -50,12 +50,12 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
             <input
               className={styles.inputField}
               type='time'
-              onChange={(e) => updateTimeframe(index, { finish: e.target.value })}
+              onChange={(e) => updateTimeframe(index, { endTime: e.target.value })}
             />
           </div>
         </div >
       ) : (
-        <p>🕰️ {t?.start} ➡️ {t?.finish} </p>
+        <p>🕰️ {t?.startTime} ➡️ {t?.endTime} </p>
       )}
       <div className={edit ? styles.inputContainer : styles.compactContainer}>
         {moment.weekdays()
