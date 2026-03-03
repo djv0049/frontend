@@ -29,7 +29,7 @@ export function AddTask() {
   }
 
   const handleCreateButtonClick = () => {
-    if (!name || timeframes.length === 0) return
+    if (!name) return
     createTask({ name, startTime, endTime, date, priority, isStreak, timeframes })
   }
 
