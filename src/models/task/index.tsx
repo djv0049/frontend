@@ -109,12 +109,13 @@ export class TaskModel implements task {
   }
   relevantToday(): boolean {
     const todayDay = moment.weekdays(moment().weekday())
-    console.log(todayDay)
-    console.log(todayDay)
+    console.log("---------------")
+    console.log(this.name)
+    console.log("today: ", todayDay)
     const c = this.timeframes.some((tf) => {
-      const x = tf.days?.some((x) => {
-        console.log(this.name, "day", x)
-        return todayDay == x
+      const x = tf.days?.some((day) => {
+        console.log("task day: ", day)
+        return todayDay == day
 
       })
       console.log(x)
@@ -138,8 +139,10 @@ export class TaskModel implements task {
     if (!this.timeframes || !this.timeframes.length) return null
     if (!this.relevantToday()) return null
     console.log("is relevant!")
-    const relevantNow = this.timeframes.map((timeframe) => {
-      return moment(timeframe.start, "HH:mm").isAfter(moment()) && moment(timeframe.finish, "HH:mm").isBefore(moment()) ? timeframe : null
+    const relevantNow = this.timeframes.filter((timeframe) => {
+      const [start, end] = [timeframe.start, timeframe.finish].map(time => moment(time, "HH:mm"))
+      const now = moment()
+      return start.isBefore(now) && end.isAfter(now) && !this.doneToday()
     })
     if (!relevantNow || !relevantNow.length) return null
     return relevantNow[0]
