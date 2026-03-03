@@ -2,7 +2,6 @@ import moment from "moment"
 import type { task } from "../../types/task"
 import { updateTask } from "../../api/task"
 import type { TaskTimeframeType } from "../../types/taskTimeframe"
-import { daysEnum } from "../../types/days"
 
 export class TaskModel implements task {
   _id: any
@@ -109,13 +108,13 @@ export class TaskModel implements task {
     }*/
   }
   relevantToday(): boolean {
-    const todayDay = moment().day() - 1
-    console.log(daysEnum[todayDay])
+    const todayDay = moment.weekdays(moment().weekday())
+    console.log(todayDay)
     console.log(todayDay)
     const c = this.timeframes.some((tf) => {
       const x = tf.days?.some((x) => {
-        console.log(this.name, "day", daysEnum[x])
-        return daysEnum[todayDay] == daysEnum[x]
+        console.log(this.name, "day", x)
+        return todayDay == x
 
       })
       console.log(x)
@@ -138,15 +137,20 @@ export class TaskModel implements task {
   currentTimeframe(): (TaskTimeframeType | null) {
     if (!this.timeframes || !this.timeframes.length) return null
     if (!this.relevantToday()) return null
-  console.log("is relevant!")
-    const relevantNow = this.timeframes.map((tf) => {
-      return moment(tf.start, "HH:mm").isAfter(moment()) && moment(tf.finish, "HH:mm").isBefore(moment()) ? tf : null
+    console.log("is relevant!")
+    const relevantNow = this.timeframes.map((timeframe) => {
+      return moment(timeframe.start, "HH:mm").isAfter(moment()) && moment(timeframe.finish, "HH:mm").isBefore(moment()) ? timeframe : null
     })
     if (!relevantNow || !relevantNow.length) return null
     return relevantNow[0]
   }
 
   currentlyRelevant(): boolean {
+    if (!!this.startTime && !!this.endTime) {
+      const [start, end] = [this.startTime, this.endTime].map(time => moment(time, "HH:mm"))
+      const now = moment()
+      return start.isBefore(now) && end.isAfter(now) && !this.doneToday()
+    }
     //console.log(this.doneLastTimeframe())
     if (this.isStreak && this.doneToday()) return false
     if (this.doneThisTimeframe()) return false

@@ -1,4 +1,4 @@
-import { daysEnum } from '../../types/days';
+import moment from 'moment';
 import type { TaskTimeframeType } from '../../types/taskTimeframe';
 import { ToggleText } from '../toggleText';
 import styles from './index.module.scss'
@@ -16,7 +16,7 @@ type timeframeComponentProps = {
 
 
 
-type day = "monday" | "tuesday" | "wednesday" | "thursday" | "friday" | "saturday" | "sunday"
+type dayName = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday"
 // NOTE: add in the start and end time for editing tasks, no need for adding new ones 
 
 // FIXME: DAYS
@@ -26,10 +26,10 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
 
   const toggleDay = (day: string) => {
     if (!t || !updateTimeframe) return
-    const newDays = (t.days ?? []).includes(day as daysEnum)
+    const newDays = (t.days ?? []).includes(day as dayName)
       ? t.days!.filter((dayName) => dayName !== day)
       : [...(t.days ?? []), day]
-    updateTimeframe(index, { days: newDays as daysEnum[] })
+    updateTimeframe(index, { days: newDays as dayName[] })
   }
 
   return (
@@ -58,12 +58,12 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
         <p>🕰️ {t?.start} ➡️ {t?.finish} </p>
       )}
       <div className={edit ? styles.inputContainer : styles.compactContainer}>
-        {Object.values(daysEnum)
+        {moment.weekdays()
           .filter((key) => typeof key === 'string')
-          .map((day: string) => {
-            const hasDay = t && t.days?.find((dayday) => dayday === day)
+          .map((weekday: string) => {
+            const hasDay = t && t.days?.find((dayday) => dayday === weekday)
             return (
-              < ToggleText edit={!!edit} callback={() => toggleDay(day)} key={day} active={!!hasDay} text={day.slice(0, 1).toUpperCase()} />
+              < ToggleText edit={!!edit} callback={() => toggleDay(weekday)} key={weekday} active={!!hasDay} text={weekday.slice(0, 1).toUpperCase()} />
             )
           })}
       </div>
