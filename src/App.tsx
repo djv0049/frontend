@@ -6,7 +6,7 @@ import { Settings } from './pages/settings'
 import { Meta } from './components/meta'
 import { NavigationPanel } from './components/navigationPanel'
 import { LiveView } from './components/liveView'
-import { Streaks } from './components/streaks/streaks'
+import { Streaks } from './components/streaks'
 
 
 function App() {
