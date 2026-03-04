@@ -57,7 +57,7 @@ export function Task(props: props) {
           {task.timeframes.map((tf, i) => {
             return (
               <TimeFrameEdit
-                key={'tf' + i} t={tf}
+                key={'tf' + i} timeframe={tf}
                 index={i}
                 compact={true}
               />

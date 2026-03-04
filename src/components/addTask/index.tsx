@@ -26,7 +26,7 @@ export function AddTask() {
   const defaultTaskTimeframe: TaskTimeframeType = {
     startTime: moment().format("HH:mm"),
     endTime: moment().add(1, 'hour').format("HH:mm"),
-    days: []
+    days: ["Monday"]
   }
 
   const handleCreateButtonClick = () => {
@@ -93,7 +93,7 @@ export function AddTask() {
             return (
               <div className={styles.timeframeContainer} key={"timeframeAdd" +  i }>
                 <TimeFrameEdit
-                  t={timeframe}
+                  timeframe={timeframe}
                   edit={true}
                   index={i}
                   updateTimeframe={updateTimeframe} 

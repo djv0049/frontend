@@ -2,32 +2,33 @@ import moment from 'moment';
 import type { TaskTimeframeType } from '../../types/taskTimeframe';
 import { ToggleText } from '../toggleText';
 import styles from './index.module.scss'
-import type { Moment } from "moment";
 import { InputField } from '../fields/inputField';
 type timeframeComponentProps = {
   index: number
-  startTime?: Moment
-  endTime?: Moment
   edit?: boolean // requires updateTimeframe
   showDelete?: boolean
   compact?: boolean
-  t?: TaskTimeframeType
+  timeframe: TaskTimeframeType
   updateTimeframe?: (index: number, updated: Partial<TaskTimeframeType>) => void
   deleteTimeframe?: (index: number) => void
 }
 
-
+ const defaultTaskTimeframe = {
+  starTime: '00:00',
+  endTime: '23:59',
+  days: ['Monday'],
+}
 
 type dayName = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday"
 // NOTE: add in the start and end time for editing tasks, no need for adding new ones 
 
 export function TimeFrameEdit(props: timeframeComponentProps) {
 
-  const { compact, edit, t, index, updateTimeframe, deleteTimeframe } = props
+  const { compact, edit, timeframe: t, index, updateTimeframe, deleteTimeframe } = props
 
   const toggleDay = (day: string) => {
     if (!t || !updateTimeframe) return
-    const newDays = (t.days ?? []).includes(day as dayName)
+    const newDays = (t.days ?? []).includes(day as dayName) // TODO: replace with the moment one
       ? t.days!.filter((dayName) => dayName !== day)
       : [...(t.days ?? []), day]
     updateTimeframe(index, { days: newDays as dayName[] })
@@ -36,17 +37,19 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
 
   return (
     <div className={styles.container}>
-      {edit && updateTimeframe && deleteTimeframe? (
+      {edit && updateTimeframe && deleteTimeframe ? (
         <div className={styles.timeframe}>
           <button onClick={() => deleteTimeframe(index)}>delete</button>
           <InputField
             title="Start"
             type="time"
+            value={t.startTime}
             updateValue={(e => updateTimeframe(index, { startTime: e.target.value }))}
           />
           <InputField
             title="End"
             type="time"
+            value={t.endTime}
             updateValue={(e => updateTimeframe(index, { endTime: e.target.value }))}
           />
 
