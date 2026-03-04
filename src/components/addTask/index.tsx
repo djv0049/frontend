@@ -11,6 +11,12 @@ import { InputField } from "../fields/inputField"
 //type frequency = "never" | "daily" | "weekly" | "monthly | yearly"
 
 export function AddTask() {
+  const defaultTaskTimeframe: TaskTimeframeType = {
+    startTime: moment().format("HH:mm"),
+    endTime: moment().add(1, 'hour').format("HH:mm"),
+    days: ["Monday"]
+  }
+
   const [name, setName] = useState("")
   const [startTime, setStartTime] = useState("")
   const [endTime, setEndTime] = useState("")
@@ -21,17 +27,13 @@ export function AddTask() {
   const [isStreak, setIsStreak] = useState(true)
   const [isRepeating, setIsRepeating] = useState(true)
   const [priority, setPriority] = React.useState<number>(1)
-  const [timeframes, setTimeframes] = useState<TaskTimeframeType[]>([])
+  const [timeframes, setTimeframes] = useState<TaskTimeframeType[]>([defaultTaskTimeframe])
 
-  const defaultTaskTimeframe: TaskTimeframeType = {
-    startTime: moment().format("HH:mm"),
-    endTime: moment().add(1, 'hour').format("HH:mm"),
-    days: ["Monday"]
-  }
 
   const handleCreateButtonClick = () => {
     if (!name) return
-    createTask({ name, startTime, endTime, date, priority, isStreak, timeframes })
+    if (isRepeating) createTask({ name, priority, isStreak, timeframes })
+    createTask({ name, startTime, endTime, date, priority })
   }
 
   const addTimeframe = (): void => {
@@ -43,7 +45,6 @@ export function AddTask() {
     setTimeframes((prev) =>
       prev.map((tf, i) => {
         const times: TaskTimeframeType = i === index ? { ...tf, ...updated } : tf
-        console.log("times for timeframe ", index, updated)
         return times
       }),
     )
@@ -81,13 +82,11 @@ export function AddTask() {
       <Checkbox aria-label="Repeating" defaultChecked onChange={(e) => setIsRepeating(e.target.checked)} />
     </div>
 
-    {isRepeating && (
+    {isRepeating ? (<>
       <div className={styles.inputContainer}>
         <p>Is Streak</p>
         <Checkbox aria-label="Streak" defaultChecked onChange={(e) => setIsStreak(e.target.checked)} />
       </div>
-    )}
-    {isRepeating ? (<>
       <div className={styles.inputContainerContainer}>
         {timeframes.map(
           (timeframe, i) => {
