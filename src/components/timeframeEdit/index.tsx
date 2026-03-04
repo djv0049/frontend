@@ -32,12 +32,22 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
     updateTimeframe(index, { days: newDays as dayName[] })
   }
 
+  function deleteTimeframe(index: number) {
+    // console.log("deleting", timeframes[index]);
+    setTimeframes((prev) =>
+      prev.filter((tf, i) => {
+        if (i !== index) {
+          return new TaskTimeframeModel(tf)
+        }
+      }),
+    )
+  }
 
   return (
     <div className={styles.container}>
       {edit && updateTimeframe ? (
         <div className={styles.timeframe}>
-          <button>delete</button>
+          <button onClick={() => deleteTimeframe(index)}>delete</button>
           <InputField
             title="Start"
             type="time"
