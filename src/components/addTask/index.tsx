@@ -67,36 +67,37 @@ export function AddTask() {
       placeholder="I will achieve"
       value={name}
       updateValue={(e => setName(e.target.value))}
-      />
+    />
     <InputField
       title="Priority"
       type='number'
       placeholder="5"
       updateValue={e => setPriority(Number(e.target.value))}
       value={priority}
-      />
+    />
 
     <div className={styles.inputContainer}>
       <p>Repeating</p>
       <Checkbox aria-label="Repeating" defaultChecked onChange={(e) => setIsRepeating(e.target.checked)} />
     </div>
 
-    <div className={styles.inputContainer}>
-      <p>Is Streak</p>
-      <Checkbox aria-label="Streak" defaultChecked onChange={(e) => setIsStreak(e.target.checked)} />
-    </div>
-
+    {isRepeating && (
+      <div className={styles.inputContainer}>
+        <p>Is Streak</p>
+        <Checkbox aria-label="Streak" defaultChecked onChange={(e) => setIsStreak(e.target.checked)} />
+      </div>
+    )}
     {isRepeating ? (<>
       <div className={styles.inputContainerContainer}>
         {timeframes.map(
           (timeframe, i) => {
             return (
-              <div className={styles.timeframeContainer} key={"timeframeAdd" +  i }>
+              <div className={styles.timeframeContainer} key={"timeframeAdd" + i}>
                 <TimeFrameEdit
                   timeframe={timeframe}
                   edit={true}
                   index={i}
-                  updateTimeframe={updateTimeframe} 
+                  updateTimeframe={updateTimeframe}
                   deleteTimeframe={deleteTimeframe}
 
                 />
