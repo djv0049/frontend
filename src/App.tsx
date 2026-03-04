@@ -35,7 +35,6 @@ function App() {
           <Tasks />)}
         {page == 'settings' && (
           <Settings />)}
-        <h2 >message=quote of the day</h2>
       </div>
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}> {/*Live view and habits*/}
         <LiveView />
