@@ -97,6 +97,7 @@ export function AddTask() {
                   edit={true}
                   index={i}
                   updateTimeframe={updateTimeframe} 
+                  deleteTimeframe={deleteTimeframe}
 
                 />
               </div>

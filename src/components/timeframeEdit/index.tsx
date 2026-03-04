@@ -13,6 +13,7 @@ type timeframeComponentProps = {
   compact?: boolean
   t?: TaskTimeframeType
   updateTimeframe?: (index: number, updated: Partial<TaskTimeframeType>) => void
+  deleteTimeframe?: (index: number) => void
 }
 
 
@@ -22,7 +23,7 @@ type dayName = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Sat
 
 export function TimeFrameEdit(props: timeframeComponentProps) {
 
-  const { compact, edit, t, index, updateTimeframe } = props
+  const { compact, edit, t, index, updateTimeframe, deleteTimeframe } = props
 
   const toggleDay = (day: string) => {
     if (!t || !updateTimeframe) return
@@ -32,20 +33,10 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
     updateTimeframe(index, { days: newDays as dayName[] })
   }
 
-  function deleteTimeframe(index: number) {
-    // console.log("deleting", timeframes[index]);
-    setTimeframes((prev) =>
-      prev.filter((tf, i) => {
-        if (i !== index) {
-          return new TaskTimeframeModel(tf)
-        }
-      }),
-    )
-  }
 
   return (
     <div className={styles.container}>
-      {edit && updateTimeframe ? (
+      {edit && updateTimeframe && deleteTimeframe? (
         <div className={styles.timeframe}>
           <button onClick={() => deleteTimeframe(index)}>delete</button>
           <InputField
