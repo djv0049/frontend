@@ -81,6 +81,22 @@ export class TaskModel implements task {
     updateTask(this)
   }
 
+  getPercentage() {
+    console.log("getting percentage")
+    const timeframe = this.currentTimeframe()
+    if (timeframe == null) return
+    const start = moment(timeframe.startTime, "HH:mm")
+    const end = moment(timeframe.endTime, "HH:mm")
+
+    console.log("start", start)
+    const total = start.diff(end)
+    console.log("total", total)
+    const passed = moment().diff(start) 
+    // Calc percentage
+    const pct = Math.min(Math.max((passed / total) * 100, 1), 100)
+    return pct
+  }
+
   doneLastTimeframe(): boolean {
     /*
     console.log(this.name, "Has timeframe?")
