@@ -13,11 +13,6 @@ type timeframeComponentProps = {
   deleteTimeframe?: (index: number) => void
 }
 
- const defaultTaskTimeframe = {
-  starTime: '00:00',
-  endTime: '23:59',
-  days: ['Monday'],
-}
 
 type dayName = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Saturday" | "Sunday"
 // NOTE: add in the start and end time for editing tasks, no need for adding new ones 
