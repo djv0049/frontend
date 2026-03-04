@@ -18,7 +18,6 @@ export async function getAllTasks() {
   const returnObject = taskObjectList.map((rawTask) => new TaskModel(
     rawTask._id,
     rawTask.name,
-    rawTask.priority,
     rawTask.timeframes,
     rawTask.startTime,
     rawTask.endTime,

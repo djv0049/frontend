@@ -8,7 +8,6 @@ export class TaskModel {
   //deadline?: Date | undefined;
 
   title: string = 'No Title'
-  priority: number = 1
   currentTimeframe?: {start: string, end: string}
 
   constructor(props: TaskObjectType) {

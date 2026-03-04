@@ -33,9 +33,6 @@ export function Task(props: props) {
           <div style={{ display: "flex", flexDirection: "row" }}>
             <div><h1>{task.name}</h1></div>
           </div>
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <div>P{task.priority}</div>
-          </div>
         </div>
 
         <div>

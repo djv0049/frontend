@@ -26,14 +26,13 @@ export function AddTask() {
   const [date, setDate] = useState(new Date())
   const [isStreak, setIsStreak] = useState(true)
   const [isRepeating, setIsRepeating] = useState(true)
-  const [priority, setPriority] = React.useState<number>(1)
   const [timeframes, setTimeframes] = useState<TaskTimeframeType[]>([defaultTaskTimeframe])
 
 
   const handleCreateButtonClick = () => {
     if (!name) return
-    if (isRepeating) createTask({ name, priority, isStreak, timeframes })
-    createTask({ name, startTime, endTime, date, priority })
+    if (isRepeating) createTask({ name, isStreak, timeframes })
+    createTask({ name, startTime, endTime, date })
   }
 
   const addTimeframe = (): void => {
@@ -41,7 +40,6 @@ export function AddTask() {
   }
 
   const updateTimeframe = (index: number, updated: Partial<TaskTimeframeType>) => {
-    // console.log("updating timeframe array for ", { title }, " with ", updated);
     setTimeframes((prev) =>
       prev.map((tf, i) => {
         const times: TaskTimeframeType = i === index ? { ...tf, ...updated } : tf
@@ -68,13 +66,6 @@ export function AddTask() {
       placeholder="I will achieve"
       value={name}
       updateValue={(e => setName(e.target.value))}
-    />
-    <InputField
-      title="Priority"
-      type='number'
-      placeholder="5"
-      updateValue={e => setPriority(Number(e.target.value))}
-      value={priority}
     />
 
     <div className={styles.inputContainer}>

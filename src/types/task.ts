@@ -6,7 +6,6 @@ export type task = {
   startTime?: string
   endTime?: string
   date?: Date
-  priority: number
   repeatingFrequency?: string
   repeatingFrequencyCount?: number
   streakCount?: number

@@ -9,7 +9,6 @@ export class TaskModel implements task {
   startTime?: string
   endTime?: string
   date?: Date
-  priority: number
   repeatingFrequency?: string
   repeatingFrequencyCount?: number
   streakCount?: number
@@ -21,7 +20,6 @@ export class TaskModel implements task {
   constructor(
     _id: any,
     name: string,
-    priority: number,
     timeframes?: TaskTimeframeType[],
     startTime?: string,
     endTime?: string,
@@ -34,7 +32,6 @@ export class TaskModel implements task {
   ) {
     this._id = _id
     this.name = name
-    this.priority = priority
     this.timeframes = timeframes || []
     this.startTime = startTime && startTime
     this.endTime = endTime && endTime
