@@ -13,7 +13,7 @@ export class TaskModel implements task {
   repeatingFrequencyCount?: number
   streakCount?: number
   isStreak?: boolean
-  lastCompleted?: Date
+  lastModified?: { date: Date, action: string } // TODO: type the action
   timeframes: TaskTimeframeType[]
   score: number = 0
   // history: TaskEvent[] = []
@@ -28,7 +28,7 @@ export class TaskModel implements task {
     repeatingFrequencyCount?: number,
     streakCount?: number,
     isStreak?: boolean,
-    lastCompleted?: Date,
+    lastModified?: { date: Date, action: string },
   ) {
     this._id = _id
     this.name = name
@@ -41,32 +41,32 @@ export class TaskModel implements task {
     this.repeatingFrequencyCount = repeatingFrequencyCount && repeatingFrequencyCount
     this.streakCount = streakCount && streakCount
     this.isStreak = isStreak && isStreak
-    this.lastCompleted = lastCompleted && lastCompleted
+    this.lastModified = lastModified && { ...lastModified }
 
   }
 
   doneToday() {
-    if (!this.lastCompleted) return false
+    if (!this.lastModified) return false
     const startOfDay = moment().startOf('day')
-    const lastCompleted = moment(this.lastCompleted)
-    return startOfDay.isBefore(lastCompleted)
+    const lastModified = moment(this.lastModified.date)
+    return startOfDay.isBefore(lastModified)
   }
 
   doneYesterday() {
-    const done = this.lastCompleted
+    const done = this.lastModified?.date
     if (done == undefined) return false
     const yesterday = moment().subtract(1, 'day').startOf('day').toDate()
     return done >= yesterday
   }
 
   markComplete() {
-    this.lastCompleted = new Date()
+    this.lastModified = {date: new Date(), action: "Complete"}
     if (this.isStreak) this.updateStreak()
     this.updateTask()
   }
 
-  markCancelled() {
-    this.lastCompleted = new Date()
+  markCancelled() { // FIXME: last completed, should be lastModified with a date and an action
+    this.lastModified = {date: new Date(), action: "cancelled"}
     if (this.isStreak) this.updateStreak()
     this.updateTask()
   }
@@ -91,7 +91,7 @@ export class TaskModel implements task {
     console.log("start", start)
     const total = start.diff(end)
     console.log("total", total)
-    const passed = moment().diff(start) 
+    const passed = moment().diff(start)
     // Calc percentage
     const pct = Math.min(Math.max((passed / total) * 100, 1), 100)
     return pct
@@ -130,9 +130,9 @@ export class TaskModel implements task {
 
   doneThisTimeframe(): boolean {
     const current = this.currentTimeframe()
-    if (current && this.lastCompleted)
-      if (this.lastCompleted > new Date(current.startTime)
-        && this.lastCompleted < new Date(current.endTime))
+    if (current && this.lastModified)
+      if (this.lastModified.date > new Date(current.startTime)
+        && this.lastModified.date < new Date(current.endTime))
         return true
     return false
   }

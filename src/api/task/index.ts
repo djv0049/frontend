@@ -26,7 +26,7 @@ export async function getAllTasks() {
     rawTask.repeatingFrequencyCount,
     rawTask.streakCount,
     rawTask.isStreak,
-    rawTask.lastCompleted ? rawTask.lastCompleted : undefined
+    rawTask.lastModified ? rawTask.lastModified : undefined
   ))
   return returnObject
 }

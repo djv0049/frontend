@@ -10,7 +10,7 @@ export type task = {
   repeatingFrequencyCount?: number
   streakCount?: number
   isStreak?: boolean
-  lastCompleted?: Date;
+  lastModified?: {date: Date, action: string}
   timeframes: TaskTimeframeType[]
   doneToday(): boolean;
   doneYesterday(): boolean;
