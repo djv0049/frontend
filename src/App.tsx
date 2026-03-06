@@ -19,8 +19,6 @@ function App() {
       .then(data => setMessage(data.working));
   }, [message]);
 
-
-
   return (
     <div style={{ width: '90vw', height: '90vh', justifyContent: 'space-between', display: 'flex', flexDirection: 'row' }} >
       <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'space-between', height: '100%', alignContent: 'center' }}>
@@ -40,7 +38,6 @@ function App() {
         <LiveView />
         <Streaks />
       </div>
-
     </div>
   )
 }

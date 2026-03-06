@@ -12,6 +12,7 @@ export function createTask(task: Partial<TaskModel>) {
   });
 
 }
+
 export async function getAllTasks() {
   const taskList = await fetch(url + '/task/', { method: "GET" })
   const taskObjectList = await taskList.json() as TaskModel[]

@@ -41,8 +41,7 @@ export function Task(props: props) {
 
               <>
                 <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markComplete())}>✅</button>
-                <button style={{ padding: "0.5rem", margin: "0.1rem" }}>⏲️</button>
-                <button style={{ padding: "0.5rem", margin: "0.1rem" }}>❌</button>
+                <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markCancelled())}>❌</button>
               </>
             )}
           </div>
