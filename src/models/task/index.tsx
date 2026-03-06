@@ -3,6 +3,9 @@ import type { task } from "../../types/task"
 import { updateTask } from "../../api/task"
 import type { TaskTimeframeType } from "../../types/taskTimeframe"
 
+
+// FIXME: re organise the conditional rendering. there's a lot of repitition
+
 export class TaskModel implements task {
   _id: any
   name: string
@@ -42,42 +45,31 @@ export class TaskModel implements task {
     this.streakCount = streakCount && streakCount
     this.isStreak = isStreak && isStreak
     this.lastModified = lastModified && { ...lastModified }
-
   }
 
-  doneToday() {
-    if (!this.lastModified) return false
-    const startOfDay = moment().startOf('day')
-    const lastModified = moment(this.lastModified.date)
-    return startOfDay.isBefore(lastModified)
-  }
-
-  doneYesterday() {
-    const done = this.lastModified?.date
-    if (done == undefined) return false
-    const yesterday = moment().subtract(1, 'day').startOf('day').toDate()
-    return done >= yesterday
-  }
 
   markComplete() {
-    this.lastModified = {date: new Date(), action: "Complete"}
+    console.debug("markComplete")
+    this.lastModified = { date: new Date(), action: "Complete" }
     if (this.isStreak) this.updateStreak()
     this.updateTask()
   }
 
   markCancelled() { // FIXME: last completed, should be lastModified with a date and an action
-    this.lastModified = {date: new Date(), action: "cancelled"}
+    console.debug("markCancelled")
+    this.lastModified = { date: new Date(), action: "cancelled" }
     if (this.isStreak) this.updateStreak()
-    this.updateTask()
   }
 
   updateStreak() {
+    console.debug("updateStreak")
     if (!this.streakCount) this.streakCount = 0
     if (!this.doneToday())
       this.streakCount += 1
   }
 
   updateTask() {
+    console.debug("update task")
     updateTask(this)
   }
 
@@ -96,6 +88,76 @@ export class TaskModel implements task {
     const pct = Math.min(Math.max((passed / total) * 100, 1), 100)
     return pct
   }
+
+  doneToday() {
+    console.debug(this.name, "modified", this.lastModified?.date)
+    if (!this.lastModified) return false
+    const startOfDay = moment().startOf('day')
+    const lastModified = moment(this.lastModified.date)
+    return startOfDay.isBefore(lastModified)
+  }
+
+  doneYesterday() {
+    const done = this.lastModified?.date
+    if (done == undefined) return false
+    const yesterday = moment().subtract(1, 'day').startOf('day').toDate()
+    return done >= yesterday
+  }
+
+  doneThisTimeframe(): boolean {
+    const current = this.currentTimeframe()
+    if (current && this.lastModified)
+      if (this.lastModified.date > new Date(current.startTime)
+        && this.lastModified.date < new Date(current.endTime))
+        return true
+    return false
+  }
+
+  isNowInTimeframeTime(timeframe: { startTime: string, endTime: string }) {
+    // Assumes timeframe IS valid today, just checks the start and end
+    const start = moment(timeframe.startTime, "HH:mm")
+    //console.log("start", start)
+    const end = moment(timeframe.endTime, "HH:mm")
+    //console.log("end", end)
+    const now = moment()
+    //console.log("start is before now", start.isBefore(now))
+    //console.log("end is after now", end.isAfter(now))
+    //console.log("done today", !this.doneToday())
+    //console.log("all", start.isBefore(now) && end.isAfter(now) && !this.doneToday())
+    return start.isBefore(now) && end.isAfter(now)
+  }
+
+  currentTimeframe(): (TaskTimeframeType | null) {
+    if (!this.timeframes || !this.timeframes.length) return null
+    if (!this.relevantToday()) return null
+    const relevantNow = this.timeframes.filter((timeframe) =>
+      this.isNowInTimeframeTime(timeframe)
+    )
+    //console.log("relevant current timeframe ", relevantNow)
+    if (!relevantNow || !relevantNow.length) return null
+    return relevantNow[0]
+  }
+
+  currentlyRelevant(): boolean {
+    if (!!this.startTime && !!this.endTime) {
+      const { startTime, endTime } = this
+      console.log(this.name, "start time", startTime)
+      return this.isNowInTimeframeTime({ startTime, endTime })
+    }
+    //console.log(this.doneLastTimeframe())
+    if (this.isStreak && this.doneToday()) return false
+    if (!this.currentTimeframe()) return false
+    if (this.doneThisTimeframe()) return false
+    console.warn(this.name, "WENT PAST ALL CHECKS")
+    return true
+  }
+
+  relevantToday(): boolean {
+    const todayDay = moment.weekdays(moment().weekday())
+    const c = this.timeframes.some((tf) => tf.days?.some((day) => todayDay == day))
+    return c
+  }
+
 
   doneLastTimeframe(): boolean {
     /*
@@ -120,79 +182,6 @@ export class TaskModel implements task {
         return !!this.timeframes[i].days[j]
       }
     }*/
-  }
-  relevantToday(): boolean {
-    const todayDay = moment.weekdays(moment().weekday())
-    const c = this.timeframes.some((tf) => tf.days?.some((day) => todayDay == day))
-    return c
-  }
-
-
-  doneThisTimeframe(): boolean {
-    const current = this.currentTimeframe()
-    if (current && this.lastModified)
-      if (this.lastModified.date > new Date(current.startTime)
-        && this.lastModified.date < new Date(current.endTime))
-        return true
-    return false
-  }
-
-  isNowInTimeframeTime(timeframe: { startTime: string, endTime: string }) {
-    // Assumes timeframe IS valid today, just checks the start and end
-    const start = moment(timeframe.startTime, "HH:mm")
-    //console.log("start", start)
-    const end = moment(timeframe.endTime, "HH:mm")
-    //console.log("end", end)
-    const now = moment()
-    //console.log("start is before now", start.isBefore(now))
-    //console.log("end is after now", end.isAfter(now))
-    //console.log("done today", !this.doneToday())
-    //console.log("all", start.isBefore(now) && end.isAfter(now) && !this.doneToday())
-    return start.isBefore(now) && end.isAfter(now) && !this.doneToday()
-  }
-
-  currentTimeframe(): (TaskTimeframeType | null) {
-    if (!this.timeframes || !this.timeframes.length) return null
-    if (!this.relevantToday()) return null
-    const relevantNow = this.timeframes.filter((timeframe) =>
-      this.isNowInTimeframeTime(timeframe)
-    )
-    //console.log("relevant current timeframe ", relevantNow)
-    if (!relevantNow || !relevantNow.length) return null
-    return relevantNow[0]
-  }
-
-  currentlyRelevant(): boolean {
-    if (!!this.startTime && !!this.endTime) {
-      const { startTime, endTime } = this
-      console.log(this.name, "start time", startTime)
-      return this.isNowInTimeframeTime({ startTime, endTime })
-    }
-    //console.log(this.doneLastTimeframe())
-    if (this.isStreak && this.doneToday()) return false
-    if (this.doneThisTimeframe()) return false
-    if (!this.currentTimeframe()) return false
-    console.warn(this.name, "WENT PAST ALL CHECKS")
-    return true
-  }
-
-  async doLater() {
-    /**Adds "postPoned" to the history of task and pushes the task back x minutes*/
-    if (!this.currentTimeframe) return this
-    //this.history.push({ event: 'postponed', at: new Date() })
-
-    const minutesModifier = 15
-    let end = moment(this.currentTimeframe()?.endTime, "HH:mm")
-    let start = moment(this.currentTimeframe()?.startTime, "HH:mm")
-
-    const endOfToday = moment().endOf("day").format("HH:mm")
-
-    if (start.diff(endOfToday, 'minutes') < minutesModifier)
-      start = start.add(minutesModifier, 'minutes')
-
-    if (end.diff(endOfToday, 'minutes') < minutesModifier)
-      end = end.add(minutesModifier, 'minutes')
-    return this
   }
 }
 
