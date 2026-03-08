@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { AddTask } from "../../components/addTask";
 import { Button } from "@mui/material";
+import { ManageTasks } from "../../components/ManageTasks";
 
 const AddView = () => <AddTask />
-const ManageView = () => <div>Manage Tasks (Edit/Delete) with search and filtering</div>;
+const ManageView = () => <ManageTasks/>
 const EditView = () => <div>Edit functionality coming soon</div>;
 export function Tasks() {
 

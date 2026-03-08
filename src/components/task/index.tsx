@@ -4,11 +4,12 @@ import { TimeFrameEdit } from "../timeframeEdit"
 type props = {
   task: taskClass
   showDelete?: boolean
-  scaleDown: number
+  scaleDown?: number
 }
 export function Task(props: props) {
-  const { task, scaleDown } = props
+  const { task } = props
   const { showDelete } = props || false
+  const scaleDown = props.scaleDown ?? 1
   const proportional = 1.1 - (scaleDown * 0.03)
 
   return (
@@ -37,7 +38,7 @@ export function Task(props: props) {
 
         <div>
           <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-            {showDelete ? (<button style={{ color: "red", padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markComplete())}>󰆴</button>) : (
+            {showDelete ? (<button style={{ color: "red", padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.delete())}>󰆴</button>) : (
 
               <>
                 <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markComplete())}>✅</button>

@@ -42,3 +42,13 @@ export async function updateTask(task: Partial<TaskModel>) {
   })
 }
 
+export async function deleteTask(task: Partial<TaskModel>) {
+  return await fetch(url + '/task/', {
+    method: "DELETE",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(task),
+  })
+}
+
