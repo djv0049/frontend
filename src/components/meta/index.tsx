@@ -1,4 +1,15 @@
+import { useState, useEffect } from "react";
+
 export function Meta() {
+
+  const [message, setMessage] = useState("");
+
+  useEffect(() => {
+    fetch(`${import.meta.env.VITE_URL}/task/test`)
+      .then(res => res.json())
+      .then(data => setMessage(data.working));
+  }, [message]);
+
   return (
     <div className='meta' style={{ display: 'flex', flexDirection: 'column' }} > {/*TODO: add meta class to modular styles*/}
       <h6>
@@ -17,27 +28,25 @@ export function Meta() {
           </tr>
           <tr>
             <td>
-              <p style={{ fontSize: '8px' }}>version </p>
+              <p style={{ fontSize: '8px' }}>version:</p>
             </td>
           </tr>
           <tr>
             <td>
-              <p style={{ fontSize: '8px' }}>update date</p>
+              <p style={{ fontSize: '8px' }}>update date:</p>
             </td>
           </tr>
           <tr>
             <td>
-              <p style={{ fontSize: '8px' }}>location:</p>
+              <p style={{ fontSize: '8px' }}>connection:</p>
+            </td>
+            <td>
+              <p style={{ fontSize: '8px' }}>{message}</p>
             </td>
           </tr>
           <tr>
             <td>
               <p style={{ fontSize: '8px' }}>last active:</p>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <p style={{ fontSize: '8px' }}>copyright</p>
             </td>
           </tr>
         </tbody>
