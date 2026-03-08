@@ -15,7 +15,7 @@
 
 .mainBody {
   width: 90vw;
-  height: 90vh;
+  height: 80vh;
   justify-content: space-between;
   display: flex;
   flex-direction: row;
@@ -36,4 +36,13 @@
   }
 }
 
+.mainContent {
+  justify-content: center;
+  min-width:80%;
+}
+.rightBar {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 

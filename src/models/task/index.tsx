@@ -1,6 +1,6 @@
 import moment from "moment"
 import type { task } from "../../types/task"
-import { updateTask } from "../../api/task"
+import { deleteTask, updateTask } from "../../api/task"
 import type { TaskTimeframeType } from "../../types/taskTimeframe"
 
 
@@ -47,6 +47,10 @@ export class TaskModel implements task {
     this.lastModified = lastModified && { ...lastModified }
   }
 
+  delete(){
+    console.log(this.name, " is being deleted")
+    deleteTask(this)
+  }
 
   markComplete() {
     console.debug("markComplete")
@@ -55,9 +59,9 @@ export class TaskModel implements task {
     this.updateTask()
   }
 
-  markCancelled() { // FIXME: last completed, should be lastModified with a date and an action
+  markCancelled() {
     console.debug("markCancelled")
-    this.lastModified = { date: new Date(), action: "cancelled" }
+    this.lastModified = { date: new Date(), action: "Cancelled" }
     if (this.isStreak) this.updateStreak()
   }
 
@@ -106,10 +110,15 @@ export class TaskModel implements task {
 
   doneThisTimeframe(): boolean {
     const current = this.currentTimeframe()
-    if (current && this.lastModified)
+    console.log("current ", current)
+    if (current && this.lastModified) {
+      console.log("last mod", this.lastModified.date)
+      console.log("end", new Date(current.startTime))
+      console.log("start:",new Date(current.endTime))
       if (this.lastModified.date > new Date(current.startTime)
         && this.lastModified.date < new Date(current.endTime))
         return true
+    }
     return false
   }
 
@@ -148,6 +157,7 @@ export class TaskModel implements task {
     if (this.isStreak && this.doneToday()) return false
     if (!this.currentTimeframe()) return false
     if (this.doneThisTimeframe()) return false
+    console.log("this was done this timeframe", this.doneThisTimeframe())
     console.warn(this.name, "WENT PAST ALL CHECKS")
     return true
   }
@@ -157,7 +167,6 @@ export class TaskModel implements task {
     const c = this.timeframes.some((tf) => tf.days?.some((day) => todayDay == day))
     return c
   }
-
 
   doneLastTimeframe(): boolean {
     /*
@@ -184,4 +193,3 @@ export class TaskModel implements task {
     }*/
   }
 }
-
