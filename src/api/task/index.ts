@@ -42,6 +42,7 @@ export async function updateTask(task: Partial<TaskModel>) {
   })
 }
 
+// FIX: doesn't work atm
 export async function deleteTask(task: Partial<TaskModel>) {
   return await fetch(url + '/task/', {
     method: "DELETE",
