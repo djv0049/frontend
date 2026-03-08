@@ -1,0 +1,39 @@
+@keyframes logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  a:nth-of-type(2) .logo {
+    animation: logo-spin infinite 20s linear;
+  }
+}
+
+.mainBody {
+  width: 90vw;
+  height: 90vh;
+  justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  @media only screen and (max-width: 600px) {
+    flex-direction: column;
+
+  }
+}
+
+.leftBar {
+  display: flex; 
+  flex-direction: column;
+  justify-content: space-between; 
+  height: 100%; 
+  align-content: center;
+  @media only screen and (max-width: 600px) {
+    display: none;
+  }
+}
+
+
