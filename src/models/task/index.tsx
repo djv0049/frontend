@@ -56,7 +56,6 @@ export class TaskModel implements task {
     console.debug("markComplete")
     this.lastModified = { date: new Date(), action: "Complete" }
     if (this.isStreak) this.updateStreak()
-    this.updateTask()
   }
 
   markCancelled() {
@@ -67,9 +66,16 @@ export class TaskModel implements task {
 
   updateStreak() {
     console.debug("updateStreak")
-    if (!this.streakCount) this.streakCount = 0
+    if (!this.streakCount)
+      console.log("has no streak")
+      this.streakCount = 0
     if (!this.doneToday())
-      this.streakCount += 1
+      console.log("not done today")
+      this.streakCount = this.streakCount + 1
+    console.log(this.streakCount)
+    console.log("updating this", this.name, this.streakCount)
+    updateTask(this)
+    console.log(this.streakCount)
   }
 
   updateTask() {
