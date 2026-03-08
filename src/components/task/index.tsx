@@ -21,8 +21,21 @@ export function Task(props: props) {
       padding: `${proportional}rem`,
       marginBottom: `${proportional}rem`,
       marginTop: `${proportional}rem`,
-      minWidth:`80%`
+      minWidth: `50%`
     }}>
+
+      <div>
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+          <p>{task.getPercentage()}</p>
+
+          {showDelete ? (<button style={{ color: "red", padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.delete())}>󰆴</button>) : (
+            <div>
+              <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markComplete())}>✅</button>
+              <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markCancelled())}>❌</button>
+            </div>
+          )}
+        </div>
+      </div>
       <div style={{
         display: "flex",
         flexDirection: "row",
@@ -34,17 +47,6 @@ export function Task(props: props) {
           </div>
         </div>
 
-        <div>
-          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-            {showDelete ? (<button style={{ color: "red", padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.delete())}>󰆴</button>) : (
-
-              <>
-                <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markComplete())}>✅</button>
-                <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markCancelled())}>❌</button>
-              </>
-            )}
-          </div>
-        </div>
 
       </div>
       <div style={{ display: "flex", flexDirection: "column" }}>

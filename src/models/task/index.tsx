@@ -47,7 +47,7 @@ export class TaskModel implements task {
     this.lastModified = lastModified && { ...lastModified }
   }
 
-  delete(){
+  delete() {
     console.log(this.name, " is being deleted")
     deleteTask(this)
   }
@@ -77,16 +77,44 @@ export class TaskModel implements task {
     updateTask(this)
   }
 
+  getNextTimeframe() {
+    // for each day, starting today:
+    //   find all timeframes with that day
+    //     sort by timeframe startTime
+    //   for each timeframe with that day:
+    //    return the first one that is after now
+    //     
+    const today = moment().weekday()
+    this.timeframes.filter((timeframe) => {
+      for (let i = 0; i <= 7; i++) {
+        const newDayNum = (today + i) % 7
+        const newDay = moment.weekdays(newDayNum)
+        const hasDays = timeframe.days?.find((day) => newDay == day)
+        if (hasDays) return true
+        console.log("day", hasDays)
+      }
+      console.log("none found")
+    }
+    )
+  }
+
+  getPercentageSinceLastModified() {
+    const lastDone = this.lastModified?.date
+    const nextTimeframe = this.getNextTimeframe()
+    return nextTimeframe
+  }
+
+
   getPercentage() {
-    console.log("getting percentage")
+
+
+    console.log("percent since last modified = ", this.getPercentageSinceLastModified())
     const timeframe = this.currentTimeframe()
     if (timeframe == null) return
     const start = moment(timeframe.startTime, "HH:mm")
     const end = moment(timeframe.endTime, "HH:mm")
 
-    console.log("start", start)
     const total = start.diff(end)
-    console.log("total", total)
     const passed = moment().diff(start)
     // Calc percentage
     const pct = Math.min(Math.max((passed / total) * 100, 1), 100)
@@ -114,7 +142,7 @@ export class TaskModel implements task {
     if (current && this.lastModified) {
       console.log("last mod", this.lastModified.date)
       console.log("end", new Date(current.startTime))
-      console.log("start:",new Date(current.endTime))
+      console.log("start:", new Date(current.endTime))
       if (this.lastModified.date > new Date(current.startTime)
         && this.lastModified.date < new Date(current.endTime))
         return true
@@ -129,6 +157,8 @@ export class TaskModel implements task {
     const end = moment(timeframe.endTime, "HH:mm")
     //console.log("end", end)
     const now = moment()
+    if (start.isAfter(end))
+      return end.add(1, 'day').isAfter(now) && start.isBefore(now)
     //console.log("start is before now", start.isBefore(now))
     //console.log("end is after now", end.isAfter(now))
     //console.log("done today", !this.doneToday())
@@ -153,11 +183,14 @@ export class TaskModel implements task {
       console.log(this.name, "start time", startTime)
       return this.isNowInTimeframeTime({ startTime, endTime })
     }
+    console.debug(this.name, "is repeating")
     //console.log(this.doneLastTimeframe())
     if (this.isStreak && this.doneToday()) return false
+    console.debug(this.name, "is not streak that has been done")
     if (!this.currentTimeframe()) return false
+    console.debug(this.name, "is in this current timeframe")
     if (this.doneThisTimeframe()) return false
-    console.log("this was done this timeframe", this.doneThisTimeframe())
+    console.log(this.name, "was not done this timeframe")
     console.warn(this.name, "WENT PAST ALL CHECKS")
     return true
   }
