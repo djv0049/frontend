@@ -14,7 +14,6 @@ export function Task(props: props) {
 
   return (
     <div style={{
-      zIndex: `${999 - proportional}`,
       background: `rgba(${scaleDown * 10},${scaleDown * 10},${scaleDown * 10},${100 - scaleDown * 20})`,
       scale: proportional,
       borderRadius: `${proportional}rem`,
@@ -22,8 +21,7 @@ export function Task(props: props) {
       padding: `${proportional}rem`,
       marginBottom: `${proportional}rem`,
       marginTop: `${proportional}rem`,
-      // TODO: move minwidth somewhere more useful/ better
-      minWidth: "30vw",
+      minWidth:`80%`
     }}>
       <div style={{
         display: "flex",
