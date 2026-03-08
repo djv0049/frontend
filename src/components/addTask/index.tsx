@@ -32,7 +32,7 @@ export function AddTask() {
   const handleCreateButtonClick = () => {
     if (!name) return
     if (isRepeating) createTask({ name, isStreak, timeframes })
-    createTask({ name, startTime, endTime, date })
+    else createTask({ name, startTime, endTime, date })
   }
 
   const addTimeframe = (): void => {
