@@ -20,6 +20,7 @@ export class TaskModel implements task {
   timeframes: TaskTimeframeType[]
   score: number = 0
   // history: TaskEvent[] = []
+
   constructor(
     _id: any,
     name: string,
@@ -111,19 +112,17 @@ export class TaskModel implements task {
   }
 
 
-  getPercentage() {
-
-
+  getPercentage(): number {
     console.log("percent since last modified = ", this.getPercentageSinceLastModified())
-    const timeframe = this.currentTimeframe()
-    if (timeframe == null) return
+    const timeframe = this.getCurrentTimeframe()
+    if (timeframe == null) return 0
     const start = moment(timeframe.startTime, "HH:mm")
     const end = moment(timeframe.endTime, "HH:mm")
-
     const total = start.diff(end)
     const passed = moment().diff(start)
     // Calc percentage
-    const pct = Math.min(Math.max((passed / total) * 100, 1), 100)
+    const pct = (-passed / total) * 100
+    console.log(pct)
     return pct
   }
 
@@ -143,7 +142,7 @@ export class TaskModel implements task {
   }
 
   doneThisTimeframe(): boolean {
-    const current = this.currentTimeframe()
+    const current = this.getCurrentTimeframe()
     console.log("current ", current)
     if (current && this.lastModified) {
       console.log("last mod", this.lastModified.date)
@@ -172,7 +171,7 @@ export class TaskModel implements task {
     return start.isBefore(now) && end.isAfter(now)
   }
 
-  currentTimeframe(): (TaskTimeframeType | null) {
+  getCurrentTimeframe(): (TaskTimeframeType | null) {
     if (!this.timeframes || !this.timeframes.length) return null
     if (!this.relevantToday()) return null
     const relevantNow = this.timeframes.filter((timeframe) =>
@@ -180,6 +179,8 @@ export class TaskModel implements task {
     )
     //console.log("relevant current timeframe ", relevantNow)
     if (!relevantNow || !relevantNow.length) return null
+  console.log(this.name, "is", relevantNow[0])
+
     return relevantNow[0]
   }
 
@@ -193,7 +194,7 @@ export class TaskModel implements task {
     //console.log(this.doneLastTimeframe())
     if (this.isStreak && this.doneToday()) return false
     console.debug(this.name, "is not streak that has been done")
-    if (!this.currentTimeframe()) return false
+    if (!this.getCurrentTimeframe()) return false
     console.debug(this.name, "is in this current timeframe")
     if (this.doneThisTimeframe()) return false
     console.log(this.name, "was not done this timeframe")
