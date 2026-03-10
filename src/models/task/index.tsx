@@ -92,12 +92,12 @@ export class TaskModel implements task {
     //    return the first one that is after now
     //     
     const today = moment().weekday()
-    this.timeframes.filter((timeframe) => {
+    return this.timeframes.filter((timeframe) => {
       for (let i = 0; i <= 7; i++) {
         const newDayNum = (today + i) % 7
         const newDay = moment.weekdays(newDayNum)
         const hasDays = timeframe.days?.find((day) => newDay == day)
-        if (hasDays) return true
+        if (hasDays) return hasDays
         console.log("day", hasDays)
       }
       console.log("none found")
@@ -121,7 +121,7 @@ export class TaskModel implements task {
     const total = start.diff(end)
     const passed = moment().diff(start)
     // Calc percentage
-    const pct = (-passed / total) * 100
+    const pct = Math.floor((-passed / total) * 100)
     console.log(pct)
     return pct
   }

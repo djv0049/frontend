@@ -5,10 +5,13 @@ type props = {
   task: taskClass
   showDelete?: boolean
   scaleDown?: number
+  showTimeframes?: boolean
 }
+
 export function Task(props: props) {
   const { task } = props
   const { showDelete } = props || false
+  const { showTimeframes } = props || false
   const scaleDown = props.scaleDown ?? 1
   const proportional = 1.1 - (scaleDown * 0.03)
 
@@ -51,7 +54,7 @@ export function Task(props: props) {
       </div>
       <div style={{ display: "flex", flexDirection: "column" }}>
         <div>
-          {task.timeframes.map((tf, i) => {
+          {showTimeframes && task.timeframes.map((tf, i) => {
             return (
               <TimeFrameEdit
                 key={'tf' + i} timeframe={tf}

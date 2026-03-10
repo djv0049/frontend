@@ -33,6 +33,17 @@ export function AddTask() {
     if (!name) return
     if (isRepeating) createTask({ name, isStreak, timeframes })
     else createTask({ name, startTime, endTime, date })
+    resetFields()
+  }
+
+  const resetFields = () => {
+    setName("")
+    setStartTime("")
+    setEndTime("")
+    setDate(new Date())
+    setIsStreak(true)
+    setIsRepeating(true)
+    setTimeframes([defaultTaskTimeframe])
   }
 
   const addTimeframe = (): void => {

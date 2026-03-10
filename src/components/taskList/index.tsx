@@ -21,11 +21,14 @@ export function TaskList() {
   }, [])
 
   const relevantTasks = taskList.filter((t: TaskModel) => (t.currentlyRelevant()))
+  const sortedTasks = relevantTasks.sort((a, b) => {
+    return b.getPercentage() - a.getPercentage()
+  })
 
   return (
     <>
       {taskList && (
-        relevantTasks.map((t: TaskModel, i: number) => {
+        sortedTasks.map((t: TaskModel, i: number) => {
           return (
             <Task
               key={t._id}
