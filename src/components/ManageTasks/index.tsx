@@ -24,7 +24,7 @@ export function ManageTasks() {
 
   return <>
     {taskList.map((task) =>
-      <Task showDelete={true} task={task} />
+      <Task showDelete={true} showTimeframes={true} task={task} />
     )}
   </>
 }

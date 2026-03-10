@@ -24,7 +24,8 @@ export function Task(props: props) {
       padding: `${proportional}rem`,
       marginBottom: `${proportional}rem`,
       marginTop: `${proportional}rem`,
-      minWidth: `50%`
+      minWidth: `50%`,
+      maxWidth: `85%`
     }}>
 
       <div>
@@ -46,7 +47,7 @@ export function Task(props: props) {
       }}>
         <div>
           <div style={{ display: "flex", flexDirection: "row" }}>
-            <div><h1>{task.name}</h1></div>
+            <div><h1 style={{padding:"1rem", margin:0}}>{task.name}</h1></div>
           </div>
         </div>
 
