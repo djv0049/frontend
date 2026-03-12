@@ -54,25 +54,24 @@ export class TaskModel implements task {
   }
 
   markComplete() {
+    if (this.isStreak) this.updateStreak()
     console.debug("markComplete")
     this.lastModified = { date: new Date(), action: "Complete" }
-    if (this.isStreak) this.updateStreak()
   }
 
   markCancelled() {
     console.debug("markCancelled")
     this.lastModified = { date: new Date(), action: "Cancelled" }
-    if (this.isStreak) this.updateStreak()
   }
 
   updateStreak() {
     console.debug("updateStreak")
     if (!this.streakCount)
       console.log("has no streak")
-      this.streakCount = 0
+    this.streakCount = 0
     if (!this.doneToday())
       console.log("not done today")
-      this.streakCount = this.streakCount + 1
+    this.streakCount = this.streakCount + 1
     console.log(this.streakCount)
     console.log("updating this", this.name, this.streakCount)
     updateTask(this)
@@ -141,17 +140,17 @@ export class TaskModel implements task {
     return done >= yesterday
   }
 
-  doneThisTimeframe(): boolean {
+  doneThisTimeframe(): boolean { // NOTE: remove getcurrent timeframe, and pass in a timeframe
     const current = this.getCurrentTimeframe()
-    console.log("current ", current)
-    if (current && this.lastModified) {
-      console.log("last mod", this.lastModified.date)
-      console.log("end", new Date(current.startTime))
-      console.log("start:", new Date(current.endTime))
-      if (this.lastModified.date > new Date(current.startTime)
-        && this.lastModified.date < new Date(current.endTime))
-        return true
-    }
+    if (!current || !this.lastModified) return false
+    const { date } = this.lastModified
+    const [start, end] = [current.startTime, current.endTime].map(time => new Date(time))
+    if (start < date && date < end) return true
+    console.log("passed if 1")
+    if (this.lastModified.date > new Date(current.startTime)
+      && this.lastModified.date < new Date(current.endTime))
+      return true
+    console.log("passed if 2")
     return false
   }
 
@@ -179,7 +178,7 @@ export class TaskModel implements task {
     )
     //console.log("relevant current timeframe ", relevantNow)
     if (!relevantNow || !relevantNow.length) return null
-  console.log(this.name, "is", relevantNow[0])
+    console.log(this.name, "is", relevantNow[0])
 
     return relevantNow[0]
   }
@@ -191,13 +190,9 @@ export class TaskModel implements task {
       return this.isNowInTimeframeTime({ startTime, endTime })
     }
     console.debug(this.name, "is repeating")
-    //console.log(this.doneLastTimeframe())
-    if (this.isStreak && this.doneToday()) return false
-    console.debug(this.name, "is not streak that has been done")
-    if (!this.getCurrentTimeframe()) return false
-    console.debug(this.name, "is in this current timeframe")
     if (this.doneThisTimeframe()) return false
-    console.log(this.name, "was not done this timeframe")
+
+    console.log(this.name, "was not done this timeframe or doesnt have a current timeframe")
     console.warn(this.name, "WENT PAST ALL CHECKS")
     return true
   }
