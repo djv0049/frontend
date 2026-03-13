@@ -27,7 +27,7 @@ export function Task(props: props) {
       marginBottom: `${proportional}rem`,
       marginTop: `${proportional}rem`,
       width: '90%',
-      zIndex: `${-scaleDown}`,
+      zIndex: `${props.scaleDown ?? 1}`,
     }}>
 
       <div>
