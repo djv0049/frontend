@@ -176,7 +176,6 @@ export class TaskModel implements task {
   }
 
   currentlyRelevant(): boolean {
-    const nextPercentage = this.getPercentageSinceLastModifiedTillNextStart()
     if (!!this.startTime && !!this.endTime) {
       const { startTime, endTime } = this
       return this.isNowInTimeframeTime({ startTime, endTime })
