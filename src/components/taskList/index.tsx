@@ -26,7 +26,7 @@ export function TaskList() {
   })
 
   return (
-    <>
+    <div style = {{ justifyItems: "center", }}>
       {taskList && (
         sortedTasks.map((t: TaskModel, i: number) => {
           return (
@@ -38,6 +38,6 @@ export function TaskList() {
           )
         })
       )}
-    </>
+    </div>
   )
 }

@@ -2,7 +2,7 @@ import { Button } from "@mui/material";
 import { useState } from "react";
 import { TaskList } from "../../components/taskList";
 
-const TaskView = () => <div><TaskList/></div>
+const TaskView = () => <TaskList />
 const DayView = () => <div>Day View Content</div>;
 const WeekView = () => <div>Week View Content</div>;
 const MonthView = () => <div>Month View Content</div>;
@@ -30,9 +30,9 @@ export function Now() {
         <Button onClick={() => setView("WeekView")}>WeekView</Button>
         <Button onClick={() => setView("MonthView")}>MonthView</Button>
       </nav>
-      
-      <SelectedView />
+      <div style={{overflowY: "visible", alignContent: "center"}}>
+        <SelectedView />
+      </div>
     </div>
   );
 }
-

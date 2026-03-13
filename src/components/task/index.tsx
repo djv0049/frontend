@@ -13,7 +13,7 @@ export function Task(props: props) {
   const { showDelete } = props || false
   const { showTimeframes } = props || false
   const scaleDown = props.scaleDown ?? 1
-  const proportional = 1.1 - (scaleDown * 0.03)
+  const proportional = 1 - (scaleDown * 0.03)
 
   return (
     <div style={{
@@ -24,13 +24,15 @@ export function Task(props: props) {
       padding: `${proportional}rem`,
       marginBottom: `${proportional}rem`,
       marginTop: `${proportional}rem`,
-      minWidth: `50%`,
-      maxWidth: `85%`
+      width: '90%'
     }}>
 
       <div>
         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-          <p>{task.getPercentage()}</p>
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <span style={{color: "red"}}>{task.getPercentage()}% {">"} {task.getCurrentTimeframe()?.endTime}</span>
+          <span style={{color: "green"}}>{task.getPercentageSinceLastModifiedTillNextStart()}%</span>
+</div>
 
           {showDelete ? (<button style={{ color: "red", padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.delete())}>󰆴</button>) : (
             <div>
@@ -47,7 +49,7 @@ export function Task(props: props) {
       }}>
         <div>
           <div style={{ display: "flex", flexDirection: "row" }}>
-            <div><h1 style={{padding:"1rem", margin:0}}>{task.name}</h1></div>
+            <div><h1 style={{ padding: "1rem", margin: 0 }}>{task.name}</h1></div>
           </div>
         </div>
 
