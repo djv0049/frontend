@@ -85,26 +85,14 @@ export class TaskModel implements task {
   }
 
   getNextTimeframe() {
-    console.log("-", this.name, " check next timeframe")
-    // for each day, starting today:
-    //   find all timeframes with that day
-    //     sort by timeframe startTime
-    //   for each timeframe with that day:
-    //    return the first one that is after now
-    //     
     const today = moment().weekday()
 
     for (let i = 0; i <= 7; i++) {
       const starttimes = this.timeframes.map((timeframe) => {
         const newDayNum = (today + i) % 7
         const newDay = moment.weekdays(newDayNum)
-        console.log("New Day: ", newDay)
-        console.log("New Day num: ", newDayNum)
-        console.log("timeframe days", timeframe.days)
-        console.log("timeframe has new day", timeframe.days?.includes(newDay))
 
         const hasDaysTimeframeList = timeframe.days?.filter((day) => newDay == day)
-        console.log("has", hasDaysTimeframeList)
         if (hasDaysTimeframeList?.length) return moment(timeframe.startTime, "HH:mm").add(i, 'days')
       }).filter(tf =>
         tf != undefined
@@ -116,15 +104,14 @@ export class TaskModel implements task {
   }
 
   getPercentageSinceLastModifiedTillNextStart() {
-    if (!this?.lastModified?.date) return
+    if (!this?.lastModified?.date) return 0
     const nextTimeframe = this.getNextTimeframe()
-    if (!nextTimeframe) return
+    if (!nextTimeframe) return 0
     const now = moment()
     const lastDone = moment(this.lastModified.date)
     const timeSinceLastDone = now.diff(lastDone)
     const totalTime = nextTimeframe?.diff(lastDone)
     const percentage = timeSinceLastDone / totalTime
-    console.log("percent between: ", lastDone.toDate(), "and", nextTimeframe.toDate(), " -- " , percentage*100)
     return Math.floor(percentage * 100)
   }
 
@@ -210,23 +197,16 @@ export class TaskModel implements task {
 
   doneLastTimeframe(): boolean {
     /*
-    console.log(this.name, "Has timeframe?")
     const tf = this.timeframes
-    console.log("how many timeframe", tf)
     const tfl = this.timeframes.length
-    console.log("last timeframe?", tfl)
     const tfhd = this.timeframes[0].days
-    console.log("timeframe 0 has days", tfhd)
     const tfdl = this.timeframes[0].days?.length
-    console.log("timeframe 0 has ", tfdl, " days")
     const tfdht = this.timeframes[0].days?.[0]
-    console.log("timeframe 0 day 0 is ", tfdht)
 */
     return false
     /*if (!tf) return false
     for (let i = 0; i < tfl; i++) {
       if (!this.timeframes[i].days?.length) return false
-      console.log("timeframe", i)
       for (let j = 0; j < this.timeframes[i].days?.length; j++) {
         return !!this.timeframes[i].days[j]
       }

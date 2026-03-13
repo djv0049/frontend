@@ -20,13 +20,38 @@ export function TaskList() {
     load()
   }, [])
 
-  const relevantTasks = taskList.filter((t: TaskModel) => (t.currentlyRelevant()))
-  const sortedTasks = relevantTasks.sort((a, b) => {
-    return b.getPercentage() - a.getPercentage()
-  })
+  // currently relevant: 4, getPercentage: 2, getPercentageToNext
+  const sortTasks = (tasklist: TaskModel[]) => {
+
+    return tasklist.sort((a, b) => {
+      const aPercent = a.getPercentage()
+      const bPercent = b.getPercentage()
+      const aProg = a.getPercentageSinceLastModifiedTillNextStart()
+      const bProg = b.getPercentageSinceLastModifiedTillNextStart()
+
+      const aScore =
+        (a.currentlyRelevant() ? 4 : -4) +
+        (aPercent > bPercent ? 2 : -2) +
+        (aProg > bProg ? 1 : -1)
+
+      const bScore =
+        (b.currentlyRelevant() ? 4 : -4) +
+        (bPercent > aPercent ? 2 : -2) +
+        (bProg > aProg ? 1 : -1)
+
+      return bScore - aScore
+    })
+    
+  }
+
+
+  const sortingTasks = sortTasks(taskList)
+  const sortedTasks = sortTasks(sortingTasks)
+
+
 
   return (
-    <div style = {{ justifyItems: "center", }}>
+    <div style={{ justifyItems: "center", }}>
       {taskList && (
         sortedTasks.map((t: TaskModel, i: number) => {
           return (
