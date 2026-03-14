@@ -18,9 +18,9 @@ export function Task(props: props) {
   return (
     <div style={{
       position: 'relative',
-      background: `rgba(${ scaleDown * 10},${ 10 + scaleDown * 5},${ 150 - scaleDown * 5},${(100 - (scaleDown * 2 ))/100})`,
+      background: `rgba(${scaleDown * 10},${10 + scaleDown * 5},${150 - scaleDown * 5},${(100 - (scaleDown * 2)) / 100})`,
       scale: proportional,
-      transform: `translateY(${(-scaleDown * scaleDown)/4}rem)`,
+      transform: `translateY(${(-scaleDown * scaleDown) / 4}rem)`,
       borderRadius: `${proportional}rem`,
       border: 'solid',
       padding: `${proportional}rem`,
@@ -31,14 +31,16 @@ export function Task(props: props) {
     }}>
 
       <div>
-        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-          <span style={{color: "red"}}>{task.getPercentage()}% {">"} {task.getCurrentTimeframe()?.endTime}</span>
-          <span style={{color: "green"}}>{task.getPercentageSinceLastModifiedTillNextStart()}%</span>
-</div>
 
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <div><h1 style={{ padding: "1rem", margin: 0 }}>{task.name}</h1></div>
+          </div>
           {showDelete ? (<button style={{ color: "red", padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.delete())}>󰆴</button>) : (
+
             <div>
+
               <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markComplete())}>✅</button>
               <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markCancelled())}>❌</button>
             </div>
@@ -51,10 +53,12 @@ export function Task(props: props) {
         justifyContent: "space-between",
       }}>
         <div>
-          <div style={{ display: "flex", flexDirection: "row" }}>
-            <div><h1 style={{ padding: "1rem", margin: 0 }}>{task.name}</h1></div>
-          </div>
         </div>
+
+          <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+            <span style={{ color: "red" }}>{task.getPercentage()}% {">"} {task.getCurrentTimeframe()?.endTime}</span>
+            <span style={{ color: "green" }}>{task.getPercentageSinceLastModifiedTillNextStart()}%</span>
+          </div>
 
 
       </div>

@@ -19,6 +19,10 @@ export class TaskModel implements task {
   lastModified?: { date: Date, action: string } // TODO: type the action
   timeframes: TaskTimeframeType[]
   score: number = 0
+  percentage: number = 0
+  nextTimeFrameStart: Date = new Date()
+  percentageTillNextTimeframe: number = 0
+  current: boolean
   // history: TaskEvent[] = []
 
   constructor(
@@ -46,6 +50,8 @@ export class TaskModel implements task {
     this.streakCount = streakCount && streakCount
     this.isStreak = isStreak && isStreak
     this.lastModified = lastModified && { ...lastModified }
+    this.percentage = this.getPercentage()
+    this.current = this.currentlyRelevant()
   }
 
   delete() {
