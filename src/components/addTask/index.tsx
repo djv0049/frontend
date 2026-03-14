@@ -1,12 +1,12 @@
 import { Checkbox, IconButton } from "@mui/material"
 import moment from "moment"
-import React, { useState } from "react"
+import { useState } from "react"
 import { createTask } from "../../api/task"
 import type { TaskTimeframeType } from "../../types/taskTimeframe"
 import { CreateTaskButton } from "../buttons/createTaskButton"
+import { InputField } from "../fields/inputField"
 import { TimeFrameEdit } from "../timeframeEdit"
 import styles from './index.module.scss'
-import { InputField } from "../fields/inputField"
 
 //type frequency = "never" | "daily" | "weekly" | "monthly | yearly"
 

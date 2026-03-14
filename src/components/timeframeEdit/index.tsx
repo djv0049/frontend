@@ -19,7 +19,7 @@ type dayName = "Monday" | "Tuesday" | "Wednesday" | "Thursday" | "Friday" | "Sat
 
 export function TimeFrameEdit(props: timeframeComponentProps) {
 
-  const { compact, edit, timeframe: t, index, updateTimeframe, deleteTimeframe } = props
+  const { edit, timeframe: t, index, updateTimeframe, deleteTimeframe } = props
 
   const toggleDay = (day: string) => {
     if (!t || !updateTimeframe) return
