@@ -1,3 +1,4 @@
+import moment from "moment"
 import type { TaskModel as taskClass } from "../../models/task"
 import { TimeFrameEdit } from "../timeframeEdit"
 
@@ -18,7 +19,6 @@ export function Task(props: props) {
   const red = task.percentage * 255/100
   const blue = 255 - task.percentageTillNextTimeframe * 255/100 || 0
   const green = task.streakCount || 0
-  console.log(red, green, blue)
   return (
     <div style={{
       position: 'relative',
@@ -39,7 +39,7 @@ export function Task(props: props) {
         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
 
           <div style={{ display: "flex", flexDirection: "row" }}>
-            <div><h1 style={{ padding: "1rem", margin: 0 }}>{task.name}</h1></div>
+            <div><p style={{ padding: "1rem", margin: 0, fontSize:'2rem', }}>{task.name}</p></div>
           </div>
           {showDelete ? (<button style={{ color: "red", padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.delete())}>󰆴</button>) : (
 
@@ -59,9 +59,11 @@ export function Task(props: props) {
         <div>
         </div>
 
-        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-          <span style={{ color: "red" }}>{task.percentage}% {">"} {task.getCurrentTimeframe()?.endTime}</span>
-          <span style={{ color: "green" }}>{task.percentageTillNextTimeframe}%</span>
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", background: 'rgba(0,0,0,0.5', borderRadius:'1rem', padding:'0.5rem' }}>
+          <span style={{ color: "red" }}>Remaining: {task.getTimeTillEndOfCurrent()}</span>
+          <span style={{ color: "green" }}>Next: {task.getTimeTillNextTimeframeString()}</span>
+          
+          
         </div>
 
 

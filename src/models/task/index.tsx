@@ -1,4 +1,4 @@
-import moment from "moment"
+import moment, { type Moment } from "moment"
 import { deleteTask, updateTask } from "../../api/task"
 import type { task } from "../../types/task"
 import type { TaskTimeframeType } from "../../types/taskTimeframe"
@@ -20,9 +20,11 @@ export class TaskModel implements task {
   timeframes: TaskTimeframeType[]
   score: number = 0
   percentage: number = 0
-  nextTimeFrameStart: Date = new Date()
+  nextTimeFrameStart: Moment
   percentageTillNextTimeframe: number = 0
   current: boolean
+  currentTimeframe: TaskTimeframeType | null
+
   // history: TaskEvent[] = []
 
   constructor(
@@ -53,6 +55,8 @@ export class TaskModel implements task {
     this.percentage = this.getPercentage()
     this.current = this.currentlyRelevant()
     this.percentageTillNextTimeframe = this.getPercentageSinceLastModifiedTillNextStart()
+    this.nextTimeFrameStart = this.getNextTimeframeStart()
+    this.currentTimeframe = this.getCurrentTimeframe()
   }
 
   delete() {
@@ -91,7 +95,7 @@ export class TaskModel implements task {
     updateTask(this)
   }
 
-  getNextTimeframe() {
+  getNextTimeframeStart(): Moment {
     const today = moment().weekday()
 
     for (let i = 0; i <= 7; i++) {
@@ -100,19 +104,28 @@ export class TaskModel implements task {
         const newDay = moment.weekdays(newDayNum)
 
         const hasDaysTimeframeList = timeframe.days?.filter((day) => newDay == day)
-        if (hasDaysTimeframeList?.length) return moment(timeframe.startTime, "HH:mm").add(i, 'days')
+        if (hasDaysTimeframeList?.length) {
+          const start = moment(timeframe.startTime, "HH:mm")
+          const nextStart = start.add(i, 'days')
+          return nextStart
+        }
       }).filter(tf =>
         tf != undefined
       ).filter(tf =>
         tf.isAfter(moment())
       )
-      if (starttimes.length) return starttimes.sort((a, b) => a.diff(b))[0]
+
+      if (starttimes.length) {
+        return starttimes.sort((a, b) => a.diff(b))[0]
+      }
     }
+    console.error('shouldn"t see this')
+    return moment()
   }
 
   getPercentageSinceLastModifiedTillNextStart() {
     if (!this?.lastModified?.date) return 0
-    const nextTimeframe = this.getNextTimeframe()
+    const nextTimeframe = this.nextTimeFrameStart
     if (!nextTimeframe) return 0
     const now = moment()
     const lastDone = moment(this.lastModified.date)
@@ -120,6 +133,33 @@ export class TaskModel implements task {
     const totalTime = nextTimeframe?.diff(lastDone)
     const percentage = timeSinceLastDone / totalTime
     return Math.floor(percentage * 100)
+  }
+
+  getTimeTillNextTimeframeString() {
+    const diff = this.nextTimeFrameStart.diff(moment())
+    const s = this.timeTillTimeString(diff)
+    return s
+  }
+
+  getTimeTillEndOfCurrent() {
+    const diff = moment(this.currentTimeframe?.endTime, "HH:mm").diff(moment())
+
+    const s = this.timeTillTimeString(diff)
+    return s
+  }
+
+  timeTillTimeString(diff: number) {
+    const minutes = Math.floor(diff / 1000 / 60) % 60
+    const hours = Math.floor(diff / 1000 / 60 / 60) % 24
+    const days = Math.floor(diff / 1000 / 60 / 60 / 24) % 7
+    const weeks = Math.floor(diff / 1000 / 60 / 60 / 24) % 7
+
+    let s = ""
+    s += weeks ? `${weeks}W` : ""
+    s += days ? `${days}D` : ""
+    s += hours ? `${hours}H` : ""
+    s += minutes ? `${minutes}M` : ""
+    return s
   }
 
 
@@ -147,7 +187,11 @@ export class TaskModel implements task {
   doneYesterday() {
     const done = this.lastModified?.date
     if (done == undefined) return false
-    const yesterday = moment().subtract(1, 'day').startOf('day').toDate()
+    const yesterday = moment()
+      .subtract(1, 'day')
+      .startOf('day')
+      .toDate()
+
     return done >= yesterday
   }
 
@@ -193,7 +237,6 @@ export class TaskModel implements task {
     if (!current || (current && this.doneInTimeframe(current)))
       return false
 
-    console.warn(this.name, "WENT PAST ALL CHECKS")
     return true
   }
 
@@ -210,7 +253,7 @@ export class TaskModel implements task {
     const tfhd = this.timeframes[0].days
     const tfdl = this.timeframes[0].days?.length
     const tfdht = this.timeframes[0].days?.[0]
-*/
+  */
     return false
     /*if (!tf) return false
     for (let i = 0; i < tfl; i++) {
