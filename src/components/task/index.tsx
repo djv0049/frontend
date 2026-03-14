@@ -15,10 +15,14 @@ export function Task(props: props) {
   const scaleDown = props.scaleDown ?? 1
   const proportional = 1 - scaleDown * 0.01
 
+  const red = task.percentage * 255/100
+  const blue = 255 - task.percentageTillNextTimeframe * 255/100 || 0
+  const green = task.streakCount || 0
+  console.log(red, green, blue)
   return (
     <div style={{
       position: 'relative',
-      background: `rgba(${scaleDown * 10},${10 + scaleDown * 5},${150 - scaleDown * 5},${(100 - (scaleDown * 2)) / 100})`,
+      background: `rgba(${red},${green},${blue},${(100 - (scaleDown * 2)) / 100})`,
       scale: proportional,
       transform: `translateY(${(-scaleDown * scaleDown) / 4}rem)`,
       borderRadius: `${proportional}rem`,
@@ -55,10 +59,10 @@ export function Task(props: props) {
         <div>
         </div>
 
-          <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
-            <span style={{ color: "red" }}>{task.getPercentage()}% {">"} {task.getCurrentTimeframe()?.endTime}</span>
-            <span style={{ color: "green" }}>{task.getPercentageSinceLastModifiedTillNextStart()}%</span>
-          </div>
+        <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+          <span style={{ color: "red" }}>{task.percentage}% {">"} {task.getCurrentTimeframe()?.endTime}</span>
+          <span style={{ color: "green" }}>{task.percentageTillNextTimeframe}%</span>
+        </div>
 
 
       </div>
