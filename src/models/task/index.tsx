@@ -1,6 +1,6 @@
 import moment from "moment"
-import type { task } from "../../types/task"
 import { deleteTask, updateTask } from "../../api/task"
+import type { task } from "../../types/task"
 import type { TaskTimeframeType } from "../../types/taskTimeframe"
 
 
@@ -125,6 +125,8 @@ export class TaskModel implements task {
   getPercentage(): number {
     const timeframe = this.getCurrentTimeframe()
     if (timeframe == null) return 0
+    const done = this.doneInTimeframe(timeframe)
+    if (done) return 0
     const start = moment(timeframe.startTime, "HH:mm")
     const end = moment(timeframe.endTime, "HH:mm")
     const total = start.diff(end)
