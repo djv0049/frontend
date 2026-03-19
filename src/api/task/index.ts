@@ -1,54 +1,80 @@
 import { TaskModel } from "../../models/task";
+import type { RawTaskTimeframeType } from "../../types/taskTimeframe";
 
 const url = import.meta.env.VITE_URL
 
-export function createTask(task: Partial<TaskModel>) {
+type RawTask = {
+  _id: any
+  name: string
+  startTime?: string
+  endTime?: string
+  date?: Date
+  repeatingFrequency?: string
+  repeatingFrequencyCount?: number
+  streakCount?: number
+  isStreak?: boolean
+  lastModified?: { date: Date, action: string }
+  timeframes: RawTaskTimeframeType[]
+}
+
+function serializeTask(task: TaskModel): RawTask {
+  return {
+    ...task,
+    startTime: task.startTime?.format("HH:mm"),
+    endTime: task.endTime?.format("HH:mm"),
+    timeframes: task.timeframes?.map(tf => ({
+      ...tf,
+      startTime: tf.startTime.format("HH:mm"),
+      endTime: tf.endTime.format("HH:mm"),
+    })) ?? [],
+  }
+}
+
+export function createTask(task: TaskModel) {
   fetch(url + '/task/', {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(task),
+    body: JSON.stringify(serializeTask(task)),
   });
-
 }
 
 export async function getAllTasks() {
   const taskList = await fetch(url + '/task/', { method: "GET" })
-  const taskObjectList = await taskList.json() as TaskModel[]
-  const returnObject = taskObjectList.map((rawTask) => new TaskModel(
-    rawTask._id,
-    rawTask.name,
-    rawTask.timeframes,
-    rawTask.startTime,
-    rawTask.endTime,
-    rawTask.date,
-    rawTask.repeatingFrequency,
-    rawTask.repeatingFrequencyCount,
-    rawTask.streakCount,
-    rawTask.isStreak,
-    rawTask.lastModified ? rawTask.lastModified : undefined
+  const rawTasks = await taskList.json() as RawTask[]
+  return rawTasks.map((raw) => new TaskModel(
+    raw._id,
+    raw.name,
+    raw.timeframes,
+    raw.startTime,
+    raw.endTime,
+    raw.date,
+    raw.repeatingFrequency,
+    raw.repeatingFrequencyCount,
+    raw.streakCount,
+    raw.isStreak,
+    raw.lastModified ?? undefined
   ))
-  return returnObject
 }
 
-export async function updateTask(task: Partial<TaskModel>) {
+export async function updateTask(task: TaskModel) {
   return await fetch(url + '/task/', {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(task),
+    body: JSON.stringify(serializeTask(task)),
   })
 }
 
-export async function deleteTask(task: Partial<TaskModel>) {
+export async function deleteTask(task: TaskModel) {
   return await fetch(url + '/task/', {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(task),
+    body: JSON.stringify(serializeTask(task)),
   })
 }
 

@@ -58,8 +58,8 @@ export class TaskModel implements task {
     this.lastModified = lastModified && { ...lastModified }
     this.percentage = this.getPercentage()
     this.current = this.currentlyRelevant()
-    this.percentageTillNextTimeframe = this.getPercentageSinceLastModifiedTillNextStart()
     this.nextTimeFrameStart = this.getNextTimeframeStart()
+    this.percentageTillNextTimeframe = this.getPercentageSinceLastModifiedTillNextStart()
     this.currentTimeframe = this.getCurrentTimeframe()
   }
 

@@ -1,4 +1,3 @@
-import moment from "moment"
 import type { TaskModel as taskClass } from "../../models/task"
 import { TimeFrameEdit } from "../timeframeEdit"
 
@@ -14,23 +13,19 @@ export function Task(props: props) {
   const { task, onUpdate } = props
   const { showDelete } = props || false
   const { showTimeframes } = props || false
-  const scaleDown = props.scaleDown ?? 1
-  const proportional = 1 - scaleDown * 0.01
+  console.log("till next: ", task.name, task.percentageTillNextTimeframe)
 
   const red = task.percentage * 255/100
-  const blue = 255 - task.percentageTillNextTimeframe * 255/100 || 0
-  const green = task.streakCount || 0
+  const blue = task.percentageTillNextTimeframe * 255/100 || 0
+  const green = task.percentage * 225/100 || 0
   return (
     <div style={{
       position: 'relative',
-      background: `rgba(${red},${green},${blue},${(100 - (scaleDown * 2)) / 100})`,
-      scale: proportional,
-      transform: `translateY(${(-scaleDown * scaleDown) / 4}rem)`,
-      borderRadius: `${proportional}rem`,
+      background: `rgba(${red},0,${blue},1)`,
+      borderRadius: `1rem`,
       border: 'solid',
-      padding: `${proportional}rem`,
-      marginBottom: `${proportional}rem`,
-      marginTop: `${proportional}rem`,
+      borderColor:`rgba(0,${green},0,1)`,
+      marginTop: `1rem`,
       width: '90%',
       zIndex: `${props.scaleDown ?? 1}`,
     }}>
