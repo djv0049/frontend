@@ -1,10 +1,11 @@
+import type { Moment } from "moment"
 import type { TaskTimeframeType } from "./taskTimeframe"
 
 export type task = {
   _id: any
   name: string
-  startTime?: string
-  endTime?: string
+  startTime?: Moment
+  endTime?: Moment
   date?: Date
   repeatingFrequency?: string
   repeatingFrequencyCount?: number

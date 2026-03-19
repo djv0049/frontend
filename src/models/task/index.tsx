@@ -9,8 +9,8 @@ import type { TaskTimeframeType } from "../../types/taskTimeframe"
 export class TaskModel implements task {
   _id: any
   name: string
-  startTime?: string
-  endTime?: string
+  startTime?: Moment
+  endTime?: Moment
   date?: Date
   repeatingFrequency?: string
   repeatingFrequencyCount?: number
@@ -25,7 +25,7 @@ export class TaskModel implements task {
   current: boolean
   currentTimeframe: TaskTimeframeType | null
 
-  // history: TaskEvent[] = []
+  //  TODO: history: TaskEvent[] = []
 
   constructor(
     _id: any,
@@ -43,10 +43,10 @@ export class TaskModel implements task {
     this._id = _id
     this.name = name
     this.timeframes = timeframes || []
-    this.startTime = startTime && startTime
-    this.endTime = endTime && endTime
+    this.startTime = startTime && moment(startTime, "HH:mm")
+    this.endTime = endTime && moment(endTime, "HH:mm")
     this.date = date && date
-    // cooldown
+    // TODO: cooldown 
     this.repeatingFrequency = repeatingFrequency && repeatingFrequency
     this.repeatingFrequencyCount = repeatingFrequencyCount && repeatingFrequencyCount
     this.streakCount = streakCount && streakCount
@@ -228,11 +228,15 @@ export class TaskModel implements task {
   }
 
   currentlyRelevant(): boolean {
-    if (!!this.startTime && !!this.endTime) {
-      const { startTime, endTime } = this
-      return this.isNowInTimeframeTime({ startTime, endTime })
-    }
-    const current = this.getCurrentTimeframe()
+    let current
+    if (!!this.startTime && !!this.endTime)
+      current = this.isNowInTimeframeTime({
+        startTime: this.startTime,
+        endTime: this.endTime
+      })
+    else
+      current = this.getCurrentTimeframe()
+
     if (!current || (current && this.doneInTimeframe(current)))
       return false
 
