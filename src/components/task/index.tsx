@@ -7,10 +7,11 @@ type props = {
   showDelete?: boolean
   scaleDown?: number
   showTimeframes?: boolean
+  onUpdate?: () => void
 }
 
 export function Task(props: props) {
-  const { task } = props
+  const { task, onUpdate } = props
   const { showDelete } = props || false
   const { showTimeframes } = props || false
   const scaleDown = props.scaleDown ?? 1
@@ -45,8 +46,8 @@ export function Task(props: props) {
 
             <div>
 
-              <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markComplete())}>✅</button>
-              <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={(() => task.markCancelled())}>❌</button>
+              <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={async () => { await task.markComplete(); onUpdate?.() }}>✅</button>
+              <button style={{ padding: "0.5rem", margin: "0.1rem" }} onClick={async () => { await task.markCancelled(); onUpdate?.() }}>❌</button>
             </div>
           )}
         </div>

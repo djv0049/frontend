@@ -64,23 +64,22 @@ export class TaskModel implements task {
     deleteTask(this)
   }
 
-  markComplete() {
+  async markComplete() {
     this.updateStreak()
     this.lastModified = {
       date: new Date(),
       action: "Complete"
     }
-    updateTask(this)
+    await updateTask(this)
   }
 
-  markCancelled() {
+  async markCancelled() {
     console.debug("markCancelled")
     this.lastModified = {
       date: new Date(),
       action: "Cancelled"
     }
-
-    updateTask(this)
+    await updateTask(this)
   }
 
   updateStreak() {

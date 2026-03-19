@@ -6,17 +6,17 @@ import { TaskModel } from "../../models/task";
 export function TaskList() {
   const [taskList, setTaskList] = useState<TaskModel[]>([])
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const res = await getAllTasks()
-        const body = res
-        setTaskList(body);
-      }
-      catch {
-        console.log("ERROER")
-      }
+  const load = async () => {
+    try {
+      const res = await getAllTasks()
+      setTaskList(res);
     }
+    catch {
+      console.log("ERROER")
+    }
+  }
+
+  useEffect(() => {
     load()
   }, [])
 
@@ -59,6 +59,7 @@ export function TaskList() {
               key={t._id}
               task={t}
               scaleDown={i}
+              onUpdate={load}
             />
           )
         })

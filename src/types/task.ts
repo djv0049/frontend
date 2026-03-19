@@ -16,7 +16,7 @@ export type task = {
   doneYesterday(): boolean;
   updateStreak(): void;
 
-  markComplete(): void;
-  markCancelled(): void;
+  markComplete(): Promise<void>;
+  markCancelled(): Promise<void>;
 
 }
