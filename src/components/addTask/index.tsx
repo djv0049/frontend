@@ -12,8 +12,8 @@ import styles from './index.module.scss'
 
 export function AddTask() {
   const defaultTaskTimeframe: TaskTimeframeType = {
-    startTime: moment().format("HH:mm"),
-    endTime: moment().add(1, 'hour').format("HH:mm"),
+    startTime: moment(),
+    endTime: moment().add(1, 'hour'),
     days: ["Monday"]
   }
 

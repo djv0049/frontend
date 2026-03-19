@@ -1,7 +1,7 @@
 import moment, { type Moment } from "moment"
 import { deleteTask, updateTask } from "../../api/task"
 import type { task } from "../../types/task"
-import type { TaskTimeframeType } from "../../types/taskTimeframe"
+import type { TaskTimeframeType, RawTaskTimeframeType } from "../../types/taskTimeframe"
 
 
 // FIXME: re organise the conditional rendering. there's a lot of repitition
@@ -30,7 +30,7 @@ export class TaskModel implements task {
   constructor(
     _id: any,
     name: string,
-    timeframes?: TaskTimeframeType[],
+    timeframes?: RawTaskTimeframeType[],
     startTime?: string,
     endTime?: string,
     date?: Date,
@@ -42,9 +42,13 @@ export class TaskModel implements task {
   ) {
     this._id = _id
     this.name = name
-    this.timeframes = timeframes || []
-    this.startTime = startTime && moment(startTime, "HH:mm")
-    this.endTime = endTime && moment(endTime, "HH:mm")
+    this.timeframes = timeframes?.map(tf => ({
+      ...tf,
+      startTime: moment(tf.startTime, "HH:mm"),
+      endTime: moment(tf.endTime, "HH:mm"),
+    })) ?? []
+    this.startTime = startTime ? moment(startTime, "HH:mm") : undefined
+    this.endTime = endTime ? moment(endTime, "HH:mm") : undefined
     this.date = date && date
     // TODO: cooldown 
     this.repeatingFrequency = repeatingFrequency && repeatingFrequency
@@ -104,7 +108,7 @@ export class TaskModel implements task {
 
         const hasDaysTimeframeList = timeframe.days?.filter((day) => newDay == day)
         if (hasDaysTimeframeList?.length) {
-          const start = moment(timeframe.startTime, "HH:mm")
+          const start = timeframe.startTime.clone()
           const nextStart = start.add(i, 'days')
           return nextStart
         }
@@ -141,10 +145,8 @@ export class TaskModel implements task {
   }
 
   getTimeTillEndOfCurrent() {
-    const diff = moment(this.currentTimeframe?.endTime, "HH:mm").diff(moment())
-
-    const s = this.timeTillTimeString(diff)
-    return s
+    const diff = this.currentTimeframe?.endTime.diff(moment()) ?? 0
+    return this.timeTillTimeString(diff)
   }
 
   timeTillTimeString(diff: number) {
@@ -167,8 +169,8 @@ export class TaskModel implements task {
     if (timeframe == null) return 0
     const done = this.doneInTimeframe(timeframe)
     if (done) return 0
-    const start = moment(timeframe.startTime, "HH:mm")
-    const end = moment(timeframe.endTime, "HH:mm")
+    const start = timeframe.startTime
+    const end = timeframe.endTime
     const total = start.diff(end)
     const passed = moment().diff(start)
     // Calc percentage
@@ -202,23 +204,29 @@ export class TaskModel implements task {
     const [start, end] = [
       timeframe.startTime,
       timeframe.endTime
-    ].map(time => moment(time, "HH:mm").toDate())
+    ].map(time => time.toDate())
     if (start < modifiedDate && modifiedDate < end) return true
     return false
   }
 
-  isNowInTimeframeTime(timeframe: { startTime: string, endTime: string }) {
+  isNowInTimeframeTime(timeframe: { startTime: Moment, endTime: Moment }) {
     // Assumes timeframe IS valid today, just checks the start and end
-    const start = moment(timeframe.startTime, "HH:mm")
-    const end = moment(timeframe.endTime, "HH:mm")
+    const { startTime: start, endTime: end } = timeframe
     const now = moment()
     if (start.isAfter(end))
-      return end.add(1, 'day').isAfter(now) && start.isBefore(now)
+      return end.clone().add(1, 'day').isAfter(now) && start.isBefore(now)
     return start.isBefore(now) && end.isAfter(now)
   }
 
   getCurrentTimeframe(): (TaskTimeframeType | null) {
-    if (this?.timeframes == undefined || !this.timeframes.length) return null
+    if (this?.timeframes == undefined || !this.timeframes.length) {
+      if (!!this.startTime && !!this.endTime) {
+        const { startTime, endTime } = this
+        return this.isNowInTimeframeTime({ startTime, endTime })
+          ? { startTime, endTime }
+          : null
+      }
+    }
     if (!this.relevantToday()) return null
     const relevantNow = this.timeframes.filter((timeframe) =>
       this.isNowInTimeframeTime(timeframe)
@@ -228,14 +236,7 @@ export class TaskModel implements task {
   }
 
   currentlyRelevant(): boolean {
-    let current
-    if (!!this.startTime && !!this.endTime)
-      current = this.isNowInTimeframeTime({
-        startTime: this.startTime,
-        endTime: this.endTime
-      })
-    else
-      current = this.getCurrentTimeframe()
+    const current = this.getCurrentTimeframe()
 
     if (!current || (current && this.doneInTimeframe(current)))
       return false

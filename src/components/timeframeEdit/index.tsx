@@ -38,19 +38,19 @@ export function TimeFrameEdit(props: timeframeComponentProps) {
           <InputField
             title="Start"
             type="time"
-            value={t.startTime}
-            updateValue={(e => updateTimeframe(index, { startTime: e.target.value }))}
+            value={t.startTime.format("HH:mm")}
+            updateValue={(e => updateTimeframe(index, { startTime: moment(e.target.value, "HH:mm") }))}
           />
           <InputField
             title="End"
             type="time"
-            value={t.endTime}
-            updateValue={(e => updateTimeframe(index, { endTime: e.target.value }))}
+            value={t.endTime.format("HH:mm")}
+            updateValue={(e => updateTimeframe(index, { endTime: moment(e.target.value, "HH:mm") }))}
           />
 
         </div >
       ) : (
-        <p>🕰️ {t?.startTime} ➡️ {t?.endTime} </p>
+        <p>🕰️ {t?.startTime.format("HH:mm")} ➡️ {t?.endTime.format("HH:mm")} </p>
       )}
       <div className={edit ? styles.inputContainer : styles.compactContainer}>
         {moment.weekdays()
