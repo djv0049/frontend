@@ -3,6 +3,7 @@ import { deleteTask, updateTask } from "../../api/task"
 import type { task } from "../../types/task"
 import type { TaskTimeframeType, RawTaskTimeframeType } from "../../types/taskTimeframe"
 
+type MOD_ACTIONS = "Complete" | "Cancelled"
 
 // FIXME: re organise the conditional rendering. there's a lot of repitition
 
@@ -38,7 +39,7 @@ export class TaskModel implements task {
     repeatingFrequencyCount?: number,
     streakCount?: number,
     isStreak?: boolean,
-    lastModified?: { date: Date, action: string },
+    lastModified?: { date: Date, action: MOD_ACTIONS },
   ) {
     this._id = _id
     this.name = name
@@ -88,9 +89,13 @@ export class TaskModel implements task {
 
   updateStreak() {
     if (!this.isStreak || this.doneToday()) return
-    if (!this.doneYesterday()) this.streakCount = 0
+    if (!this.doneYesterday()) {
+      this.streakCount = 1
+      return
+    }
     const { streakCount } = this
     this.streakCount = streakCount ? streakCount + 1 : 0
+    return
   }
 
   updateTask() {
@@ -187,13 +192,21 @@ export class TaskModel implements task {
 
   doneYesterday() {
     const done = this.lastModified?.date
-    if (done == undefined) return false
-    const yesterday = moment()
-      .subtract(1, 'day')
-      .startOf('day')
-      .toDate()
+    const mod = this.lastModified?.action
+    if (done == undefined || mod == undefined) return false
 
-    return done >= yesterday
+    const yesterday = moment()
+      .startOf('day')
+      .subtract(1, 'day')
+    if (
+      moment(done).toDate() > yesterday.toDate()
+      && moment(done).toDate() < moment().startOf('day').toDate()
+      && mod === 'Complete'
+    ) {
+      return true
+    }
+    console.log(done, mod)
+    return false
   }
 
   doneInTimeframe(timeframe: TaskTimeframeType): boolean {
