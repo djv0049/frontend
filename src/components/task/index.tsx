@@ -58,10 +58,7 @@ export function Task(props: props) {
         <div style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", background: 'rgba(0,0,0,0.5', borderRadius:'1rem', padding:'0.5rem' }}>
           <span style={{ color: "red" }}>Remaining: {task.getTimeTillEndOfCurrent()}</span>
           <span style={{ color: "green" }}>Next: {task.getTimeTillNextTimeframeString()}</span>
-          
-          
         </div>
-
 
       </div>
       <div style={{ display: "flex", flexDirection: "column" }}>

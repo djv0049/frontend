@@ -1,6 +1,9 @@
 import type { Moment } from "moment"
 import type { TaskTimeframeType } from "./taskTimeframe"
 
+
+export type MOD_ACTIONS = "Complete" | "Cancelled"
+
 export type task = {
   _id: any
   name: string
@@ -15,7 +18,7 @@ export type task = {
   timeframes: TaskTimeframeType[]
   doneToday(): boolean;
   doneYesterday(): boolean;
-  updateStreak(): void;
+  updateStreak(action: MOD_ACTIONS): void;
 
   markComplete(): Promise<void>;
   markCancelled(): Promise<void>;

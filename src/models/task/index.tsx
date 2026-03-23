@@ -1,9 +1,8 @@
 import moment, { type Moment } from "moment"
 import { deleteTask, updateTask } from "../../api/task"
-import type { task } from "../../types/task"
+import type { MOD_ACTIONS, task } from "../../types/task"
 import type { TaskTimeframeType, RawTaskTimeframeType } from "../../types/taskTimeframe"
 
-type MOD_ACTIONS = "Complete" | "Cancelled"
 
 // FIXME: re organise the conditional rendering. there's a lot of repitition
 
@@ -17,7 +16,7 @@ export class TaskModel implements task {
   repeatingFrequencyCount?: number
   streakCount?: number
   isStreak?: boolean
-  lastModified?: { date: Date, action: string } // TODO: type the action
+  lastModified?: { date: Date, action: MOD_ACTIONS } // TODO: type the action
   timeframes: TaskTimeframeType[]
   score: number = 0
   percentage: number = 0
@@ -70,7 +69,7 @@ export class TaskModel implements task {
   }
 
   async markComplete() {
-    this.updateStreak()
+    this.updateStreak('Complete')
     this.lastModified = {
       date: new Date(),
       action: "Complete"
@@ -79,7 +78,7 @@ export class TaskModel implements task {
   }
 
   async markCancelled() {
-    console.debug("markCancelled")
+    this.updateStreak('Cancelled')
     this.lastModified = {
       date: new Date(),
       action: "Cancelled"
@@ -87,7 +86,11 @@ export class TaskModel implements task {
     await updateTask(this)
   }
 
-  updateStreak() {
+  updateStreak(action: MOD_ACTIONS) {
+    if (action == 'Cancelled') {
+      this.streakCount = 0
+      return
+    }
     if (!this.isStreak || this.doneToday()) return
     if (!this.doneYesterday()) {
       this.streakCount = 1

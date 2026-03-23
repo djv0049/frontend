@@ -1,5 +1,7 @@
 import { TaskModel } from "../../models/task";
 import type { RawTaskTimeframeType } from "../../types/taskTimeframe";
+import type { MOD_ACTIONS } from "../../types/task";
+
 
 const url = import.meta.env.VITE_URL
 
@@ -13,7 +15,7 @@ type RawTask = {
   repeatingFrequencyCount?: number
   streakCount?: number
   isStreak?: boolean
-  lastModified?: { date: Date, action: string }
+  lastModified?: { date: Date, action: MOD_ACTIONS }
   timeframes: RawTaskTimeframeType[]
 }
 

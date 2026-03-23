@@ -31,13 +31,13 @@ export function Streaks() {
     <div>
       <p>Streaks!</p>
       {
-        taskList.map((t: TaskModel) => {
+        taskList.sort((a, b) => (a.streakCount || 0) - (b.streakCount || 0)).map((t: TaskModel) => {
           if (t._id && !t.isStreak) return
           else
 
             return (
               <div key={`streak ${t._id}`} style={{ width: "100%", display: "flex", justifyContent: "space-between" }}>
-                <p>{t.name}</p> {isDoneToday(t) ? (<p>🔥{t.streakCount}</p>) : t.doneYesterday() ? (<p>🔴</p>) : (<p>❌</p>)}
+                <p>{t.name}</p> {isDoneToday(t) ? (<p>🔥{t.streakCount}</p>) : t.doneYesterday() ? (<p>🔴{t.streakCount}</p>) : (<p>❌</p>)}
               </div>
             )
         }
